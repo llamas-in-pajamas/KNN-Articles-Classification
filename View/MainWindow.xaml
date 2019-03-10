@@ -1,0 +1,70 @@
+﻿<Window x:Class="View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:View"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="530" Width="800">
+    <Border Padding="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Button Grid.Column="1" Margin="5" Content="Select catalog to load articles" Command="{Binding SelectCatalogButton}" />
+                <TextBlock FontWeight="Bold" Grid.Column="0" Text="{Binding SelectArticleText}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Padding="2" Text="{Binding ArticleNumberTextBox}" />
+                    <Button Grid.Column="1" Margin="5" Content="Load Article" Command="{Binding LoadArticleButton}" />
+                </Grid>
+                <TextBlock Margin="0 10 0 5" Text="Article Info:" TextAlignment="Center" FontSize="16" />
+                
+                <TextBlock Margin="0 5 0 2" Text="Date" TextAlignment="Center" />
+                <TextBox Padding="2" Text="{Binding ArticleDateTextBox}" IsReadOnly="True" />
+
+                <TextBlock Margin="0 5 0 2" Text="Author" TextAlignment="Center" />
+                <TextBox Padding="2" Text="{Binding ArticleAuthorTextBox}" IsReadOnly="True" />
+
+
+                <TextBlock Margin="0 5 0 2" Text="Title" TextAlignment="Center" />
+                <TextBox Height="50" TextWrapping="Wrap" Padding="2" Text="{Binding ArticleTitleTextBox}" IsReadOnly="True" />
+
+
+                <TextBlock Margin="0 5 0 2" Text="DateLine" TextAlignment="Center" />
+                <TextBox Padding="2" Text="{Binding ArticleDateLineTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" />
+
+                <TextBlock Margin="0 5 0 2" Text="Places" TextAlignment="Center" />
+                <TextBox Padding="2" Height="25" Text="{Binding ArticlePlacesTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+
+                <TextBlock Margin="0 5 0 2" Text="Companies" TextAlignment="Center" />
+                <TextBox Padding="2" Height="25" Text="{Binding ArticleCompaniesTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+
+                <TextBlock Margin="0 5 0 2" Text="Exchanges" TextAlignment="Center" />
+                <TextBox Padding="2" Height="25" Text="{Binding ArticleExchangesTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Margin="5 0 0 0">
+                <TextBlock Margin="0 5 0 2" Text="Body" TextAlignment="Center" />
+                <TextBox Padding="2" Height="200" Text="{Binding ArticleBodyTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+
+                <TextBlock Margin="0 5 0 2" Text="Topics" TextAlignment="Center" />
+                <TextBox Padding="2" Height="50" Text="{Binding ArticleTopicsTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+
+                <TextBlock Margin="0 5 0 2" Text="Orgs" TextAlignment="Center" />
+                <TextBox Padding="2" Height="50" Text="{Binding ArticleOrgsTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+
+                <TextBlock Margin="0 5 0 2" Text="People" TextAlignment="Center" />
+                <TextBox Padding="2" Height="50" Text="{Binding ArticlePeopleTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+
+            </StackPanel>
+
+        </Grid>
+    </Border>
+</Window>
