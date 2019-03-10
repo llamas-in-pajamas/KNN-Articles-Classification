@@ -9,6 +9,17 @@ namespace SGMParser
 {
     public class SGMLReader
     {
+        public List<ArticleModel> ReadAllSGMLFromDirectory(string pathToDirectory)
+        {
+            List<ArticleModel> articles = new List<ArticleModel>();
+            string[] files = System.IO.Directory.GetFiles(pathToDirectory, "*.sgm");
+            foreach (string file in files)
+            {
+                articles.AddRange(ReadSGML(file));
+            }
+            return articles;
+        }
+
         public List<ArticleModel> ReadSGML(string path)
         {
             List<ArticleModel> articles = new List<ArticleModel>();
@@ -28,7 +39,7 @@ namespace SGMParser
                 article.Article.Title = reuter.Descendants("TITLE").FirstOrDefault()?.InnerText;
                 article.Article.Body = reuter.Descendants("BODY").FirstOrDefault()?.InnerText;
 
-                article.Date = DateTime.Parse(reuter.Descendants("DATE").FirstOrDefault()?.InnerText);
+                article.Date = reuter.Descendants("DATE").FirstOrDefault()?.InnerText;
 
                 article.Companies = ListItems.Where(n => n.ParentNode.Name.Equals("companies")).Select(t => t.InnerText)
                     .ToList();

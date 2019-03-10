@@ -10,10 +10,17 @@ namespace Tests
         [TestMethod]
         public void TestMethod1()
         {
-            string path = @"reut2-000.sgm";
+            string path = @"../../../Articles/reut2-000.sgm";
             SGMLReader reader = new SGMLReader();
             reader.ReadSGML(path);
+        }
 
+        [TestMethod]
+        public void TestMethod2()
+        {
+            string baseDirectory = @"../../../Articles";
+            SGMLReader reader = new SGMLReader();
+            reader.ReadAllSGMLFromDirectory(baseDirectory);
         }
     }
 }
