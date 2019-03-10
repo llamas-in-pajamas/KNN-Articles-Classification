@@ -222,14 +222,24 @@ namespace View.ViewModel
             {
                 dialog.IsFolderPicker = true;
                 dialog.RestoreDirectory = true;
+                dialog.AllowNonFileSystemItems = true;
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     path = dialog.FileName;
                 }
 
             }
-            Articles = reader.ReadAllSGMLFromDirectory(path);
-            SelectArticleText = $"Loaded {Articles.Count} articles! Choose one:";
+
+            try
+            {
+                Articles = reader.ReadAllSGMLFromDirectory(path);
+                SelectArticleText = $"Loaded {Articles.Count} articles! Choose one:";
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error: {e.Message}");
+            }
+            
         }
 
     }
