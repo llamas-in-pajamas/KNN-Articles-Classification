@@ -38,6 +38,7 @@ namespace SGMParser
                 article.Article.DateLine = reuter.Descendants("DATELINE").FirstOrDefault()?.InnerText;
                 article.Article.Title = reuter.Descendants("TITLE").FirstOrDefault()?.InnerText;
                 article.Article.Body = reuter.Descendants("BODY").FirstOrDefault()?.InnerText;
+                article.Unknown = reuter.Descendants("UNKNOWN").FirstOrDefault()?.InnerText;
 
                 article.Date = reuter.Descendants("DATE").FirstOrDefault()?.InnerText;
 

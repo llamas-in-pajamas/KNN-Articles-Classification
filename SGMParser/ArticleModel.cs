@@ -6,6 +6,7 @@ namespace SGMParser
     public class ArticleModel
     {
         public string Date { get; set; }
+        public string Unknown { get; set; }
         public List<string> Topics { get; set; }
         public List<string> Places { get; set; }
         public List<string> People { get; set; }
