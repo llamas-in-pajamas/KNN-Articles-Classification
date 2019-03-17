@@ -2,8 +2,12 @@
 using SGMParser;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Win32;
+using TextParser;
 using View.ViewModel.Base;
 
 namespace View.ViewModel
@@ -25,9 +29,8 @@ namespace View.ViewModel
         private string _articleOrgsTextBox;
         private string _articlePeopleTextBox;
 
-
-
         public ICommand SelectCatalogButton { get; }
+        public ICommand SelectStopListButton { get; }
         public ICommand LoadArticleButton { get; }
 
         private List<ArticleModel> Articles = new List<ArticleModel>();
@@ -173,6 +176,28 @@ namespace View.ViewModel
         {
             SelectCatalogButton = new RelayCommand(LoadArticlesFromCatalog);
             LoadArticleButton = new RelayCommand(LoadArticle);
+            SelectStopListButton = new RelayCommand(LoadStopList);
+        }
+
+        private void LoadStopList()
+        {
+            List<string> words = new List<string>();
+            OpenFileDialog dialog = new OpenFileDialog
+            {
+                Filter = "Text File(*txt)| *.txt",
+                RestoreDirectory = true
+            };
+            if (dialog.ShowDialog() == true)
+            {
+                words = File.ReadAllLines(dialog.FileName).ToList();
+            }
+
+            //StopListService stopListService = new StopListService(Articles[0].Article.Body);
+            //List<string> filteredWords = stopListService.Call(words);
+            //StemmingService stemmingService = new StemmingService();
+            //List<string> stemmedWords = stemmingService.Call(filteredWords);
+            //TermFrequencyParserService termService = new TermFrequencyParserService(stemmedWords);
+            //termService.Call();
         }
 
 
