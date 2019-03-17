@@ -14,163 +14,42 @@ namespace View.ViewModel
 {
     public class MainWindowVM : BaseVM
     {
-        private string _selectArticleText;
-        private string _articleNumberTextBox;
-
-        private string _articleDateTextBox;
-        private string _articleAuthorTextBox;
-        private string _articleTitleTextBox;
-        private string _articleDateLineTextBox;
-        private string _articlePlacesTextBox;
-        private string _articleCompaniesTextBox;
-        private string _articleExchangesTextBox;
-        private string _articleBodyTextBox;
-        private string _articleTopicsTextBox;
-        private string _articleOrgsTextBox;
-        private string _articlePeopleTextBox;
-
         public ICommand SelectCatalogButton { get; }
         public ICommand SelectStopListButton { get; }
         public ICommand LoadArticleButton { get; }
 
         private List<ArticleModel> Articles = new List<ArticleModel>();
 
-        public string SelectArticleText
-        {
-            get => _selectArticleText;
-            set
-            {
-                _selectArticleText = value;
-                OnPropertyChanged(nameof(SelectArticleText));
-            }
+        #region props
 
-        }
+        public string SelectArticleText { get; set; }
 
-        public string ArticleNumberTextBox
-        {
-            get => _articleNumberTextBox;
-            set
-            {
-                _articleNumberTextBox = value;
-                OnPropertyChanged(nameof(ArticleNumberTextBox));
-            }
+        public string ArticleNumberTextBox { get; set; }
 
-        }
-        public string ArticleAuthorTextBox
-        {
-            get => _articleAuthorTextBox;
-            set
-            {
-                _articleAuthorTextBox = value;
-                OnPropertyChanged(nameof(ArticleAuthorTextBox));
-            }
+        public string ArticleAuthorTextBox { get; set; }
 
-        }
+        public string ArticleDateTextBox { get; set; }
 
-        public string ArticleDateTextBox
-        {
-            get => _articleDateTextBox;
-            set
-            {
-                _articleDateTextBox = value;
-                OnPropertyChanged(nameof(ArticleDateTextBox));
-            }
+        public string ArticleTitleTextBox { get; set; }
 
-        }
+        public string ArticleDateLineTextBox { get; set; }
 
-        public string ArticleTitleTextBox
-        {
-            get => _articleTitleTextBox;
-            set
-            {
-                _articleTitleTextBox = value;
-                OnPropertyChanged(nameof(ArticleTitleTextBox));
-            }
+        public string ArticlePlacesTextBox { get; set; }
 
-        }
+        public string ArticleCompaniesTextBox { get; set; }
 
-        public string ArticleDateLineTextBox
-        {
-            get => _articleDateLineTextBox;
-            set
-            {
-                _articleDateLineTextBox = value;
-                OnPropertyChanged(nameof(ArticleDateLineTextBox));
+        public string ArticleExchangesTextBox { get; set; }
 
-            }
+        public string ArticleBodyTextBox { get; set; }
 
-        }
+        public string ArticleTopicsTextBox { get; set; }
 
-        public string ArticlePlacesTextBox
-        {
-            get => _articlePlacesTextBox;
-            set
-            {
-                _articlePlacesTextBox = value;
-                OnPropertyChanged(nameof(ArticlePlacesTextBox));
-            }
+        public string ArticleOrgsTextBox { get; set; }
 
-        }
+        public string ArticlePeopleTextBox { get; set; }
 
-        public string ArticleCompaniesTextBox
-        {
-            get => _articleCompaniesTextBox;
-            set
-            {
-                _articleCompaniesTextBox = value;
-                OnPropertyChanged(nameof(ArticleCompaniesTextBox));
-            }
+        #endregion
 
-        }
-
-        public string ArticleExchangesTextBox
-        {
-            get => _articleExchangesTextBox;
-            set
-            {
-                _articleExchangesTextBox = value;
-                OnPropertyChanged(nameof(ArticleExchangesTextBox));
-            }
-
-        }
-
-        public string ArticleBodyTextBox
-        {
-            get => _articleBodyTextBox;
-            set
-            {
-                _articleBodyTextBox = value;
-                OnPropertyChanged(nameof(ArticleBodyTextBox));
-            }
-        }
-
-        public string ArticleTopicsTextBox
-        {
-            get => _articleTopicsTextBox;
-            set
-            {
-                _articleTopicsTextBox = value;
-                OnPropertyChanged(nameof(ArticleTopicsTextBox));
-            }
-        }
-
-        public string ArticleOrgsTextBox
-        {
-            get => _articleOrgsTextBox;
-            set
-            {
-                _articleOrgsTextBox = value;
-                OnPropertyChanged(nameof(ArticleOrgsTextBox));
-            }
-        }
-
-        public string ArticlePeopleTextBox { get => _articlePeopleTextBox;
-            set
-            {
-                _articlePeopleTextBox = value; 
-                OnPropertyChanged(nameof(ArticlePeopleTextBox));
-            }
-        }
 
         public MainWindowVM()
         {
@@ -203,7 +82,7 @@ namespace View.ViewModel
 
         private void LoadArticle()
         {
-            int article = Int32.Parse(ArticleNumberTextBox);
+            int article = int.Parse(ArticleNumberTextBox);
             if (article < 0 || article > Articles.Count)
             {
                 MessageBox.Show("Incorrect Number");
@@ -252,7 +131,6 @@ namespace View.ViewModel
                 {
                     path = dialog.FileName;
                 }
-
             }
 
             try
