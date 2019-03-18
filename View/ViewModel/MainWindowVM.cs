@@ -10,6 +10,7 @@ using Microsoft.Win32;
 using TextParser;
 using View.ViewModel.Base;
 using ExtensionMethods;
+using Services;
 
 namespace View.ViewModel
 {
@@ -60,12 +61,8 @@ namespace View.ViewModel
                 words = File.ReadAllLines(dialog.FileName).ToList();
             }
 
-            StopListService stopListService = new StopListService(Articles[0].Article.Body.RemovePunctuation().ToListWithoutEmptyEntries());
-            List<string> filteredWords = stopListService.Call(words);
-            StemmingService stemmingService = new StemmingService();
-            List<string> stemmedWords = stemmingService.Call(filteredWords);
-            TermFrequencyParserService termService = new TermFrequencyParserService(stemmedWords);
-            termService.Call();
+            ArticlesHandler handler = new ArticlesHandler();
+            handler.ProcessArticles(Articles, words);
         }
 
 

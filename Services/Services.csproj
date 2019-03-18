@@ -41,13 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArticleAnalyticsModel.cs" />
     <Compile Include="ArticlesHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ExtensionMethods\ExtensionMethods.csproj">
+      <Project>{886faba1-3335-47f9-9297-f2c14929febd}</Project>
+      <Name>ExtensionMethods</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SGMParser\SGMParser.csproj">
       <Project>{a247385d-7851-4dc6-bb22-1f7e02d7aa5e}</Project>
       <Name>SGMParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TextParser\TextParser.csproj">
+      <Project>{b971c4e8-e9d0-4387-a329-a44b17c60757}</Project>
+      <Name>TextParser</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
