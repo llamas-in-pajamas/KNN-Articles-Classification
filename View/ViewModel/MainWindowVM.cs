@@ -9,6 +9,7 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using TextParser;
 using View.ViewModel.Base;
+using ExtensionMethods;
 
 namespace View.ViewModel
 {
@@ -71,7 +72,7 @@ namespace View.ViewModel
                 words = File.ReadAllLines(dialog.FileName).ToList();
             }
 
-            StopListService stopListService = new StopListService(Articles[0].Article.Body.RemovePunctuation().ToListWithoutEmptyEntitles(););
+            StopListService stopListService = new StopListService(Articles[0].Article.Body.RemovePunctuation().ToListWithoutEmptyEntitles());
             List<string> filteredWords = stopListService.Call(words);
             StemmingService stemmingService = new StemmingService();
             List<string> stemmedWords = stemmingService.Call(filteredWords);

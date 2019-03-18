@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ExtensionMethods;
+﻿using System.Collections.Generic;
 
 namespace TextParser
 {
@@ -11,7 +8,7 @@ namespace TextParser
 
         public StopListService(List<string> words)
         {
-            Words = words
+            Words = words;
         }
 
         public List<string> Call(List<string> stopList)

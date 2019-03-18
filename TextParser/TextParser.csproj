@@ -53,11 +53,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ExtensionMethods\ExtensionMethods.csproj">
-      <Project>{886faba1-3335-47f9-9297-f2c14929febd}</Project>
-      <Name>ExtensionMethods</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
