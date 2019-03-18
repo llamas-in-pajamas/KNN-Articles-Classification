@@ -60,7 +60,7 @@ namespace View.ViewModel
                 words = File.ReadAllLines(dialog.FileName).ToList();
             }
 
-            StopListService stopListService = new StopListService(Articles[0].Article.Body.RemovePunctuation().ToListWithoutEmptyEntitles());
+            StopListService stopListService = new StopListService(Articles[0].Article.Body.RemovePunctuation().ToListWithoutEmptyEntries());
             List<string> filteredWords = stopListService.Call(words);
             StemmingService stemmingService = new StemmingService();
             List<string> stemmedWords = stemmingService.Call(filteredWords);

@@ -13,7 +13,7 @@ namespace ExtensionMethods
             return new string(text.Where(c => !char.IsPunctuation(c)).ToArray());
         }
 
-        public static List<string> ToListWithoutEmptyEntitles(this string text)
+        public static List<string> ToListWithoutEmptyEntries(this string text)
         {
             return text.Split(new char[0], StringSplitOptions.RemoveEmptyEntries).ToList();
         }
