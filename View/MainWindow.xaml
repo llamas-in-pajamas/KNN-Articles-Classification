@@ -14,7 +14,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
                 <Button Grid.Column="1" Margin="5" Content="Select catalog to load articles" Command="{Binding SelectCatalogButton}" />
-                <Button Grid.Column="1" Margin="5" Content="Select stop list" Command="{Binding SelectStopListButton}" />
+                <Button Grid.Column="1" Margin="5" Content="Select stop list" Command="{Binding SelectStopListButton}" IsEnabled="{Binding IsEnabledStopListBTN}" />
                 <TextBlock FontWeight="Bold" Grid.Column="0" Text="{Binding SelectArticleText}" />
                 <Grid>
                     <Grid.ColumnDefinitions>

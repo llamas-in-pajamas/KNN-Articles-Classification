@@ -7,9 +7,9 @@ using HtmlAgilityPack;
 
 namespace SGMParser
 {
-    public class SGMLReader
+    public static class SGMLReader
     {
-        public List<ArticleModel> ReadAllSGMLFromDirectory(string pathToDirectory)
+        public static List<ArticleModel> ReadAllSGMLFromDirectory(string pathToDirectory)
         {
             List<ArticleModel> articles = new List<ArticleModel>();
             string[] files = System.IO.Directory.GetFiles(pathToDirectory, "*.sgm");
@@ -20,7 +20,7 @@ namespace SGMParser
             return articles;
         }
 
-        public List<ArticleModel> ReadSGML(string path)
+        public static List<ArticleModel> ReadSGML(string path)
         {
             List<ArticleModel> articles = new List<ArticleModel>();
             HtmlDocument document = new HtmlDocument();
