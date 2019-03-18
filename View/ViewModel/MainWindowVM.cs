@@ -71,12 +71,12 @@ namespace View.ViewModel
                 words = File.ReadAllLines(dialog.FileName).ToList();
             }
 
-            //StopListService stopListService = new StopListService(Articles[0].Article.Body);
-            //List<string> filteredWords = stopListService.Call(words);
-            //StemmingService stemmingService = new StemmingService();
-            //List<string> stemmedWords = stemmingService.Call(filteredWords);
-            //TermFrequencyParserService termService = new TermFrequencyParserService(stemmedWords);
-            //termService.Call();
+            StopListService stopListService = new StopListService(Articles[0].Article.Body);
+            List<string> filteredWords = stopListService.Call(words);
+            StemmingService stemmingService = new StemmingService();
+            List<string> stemmedWords = stemmingService.Call(filteredWords);
+            TermFrequencyParserService termService = new TermFrequencyParserService(stemmedWords);
+            termService.Call();
         }
 
 

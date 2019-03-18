@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ExtensionMethods;
 
 namespace TextParser
 {
     public class StopListService
     {
         public List<string> Words { get; set; } = new List<string>();
-        public List<string> Unknown { get; set; } = new List<string>();
 
         public StopListService(string text)
         {
-            Words = text.Split(new char[0], StringSplitOptions.RemoveEmptyEntries).ToList();
+            Words = text.RemovePunctuation().ToListWithoutEmptyEntitles();
         }
 
         public List<string> Call(List<string> stopList)
