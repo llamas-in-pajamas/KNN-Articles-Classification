@@ -29,7 +29,7 @@ namespace TextParser
             }
 
             List<string> keys = new List<string>(_wordFrequency.Keys);
-            var allWordsCount = Words.Count;
+            int allWordsCount = Words.Count;
             foreach (string key in keys)
             {
                 _wordFrequency[key] /= allWordsCount;
@@ -40,7 +40,7 @@ namespace TextParser
         {
             List<string> temp = new List<string>(Words).Distinct().ToList();
 
-            foreach (var word in temp)
+            foreach (string word in temp)
             {
                 _wordFrequency.Add(word, 0);
             }
