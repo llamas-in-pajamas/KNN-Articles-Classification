@@ -71,7 +71,7 @@ namespace View.ViewModel
                 words = File.ReadAllLines(dialog.FileName).ToList();
             }
 
-            StopListService stopListService = new StopListService(Articles[0].Article.Body);
+            StopListService stopListService = new StopListService(Articles[0].Article.Body.RemovePunctuation().ToListWithoutEmptyEntitles(););
             List<string> filteredWords = stopListService.Call(words);
             StemmingService stemmingService = new StemmingService();
             List<string> stemmedWords = stemmingService.Call(filteredWords);
@@ -142,7 +142,7 @@ namespace View.ViewModel
             {
                 MessageBox.Show($"Error: {e.Message}");
             }
-            
+
         }
 
     }

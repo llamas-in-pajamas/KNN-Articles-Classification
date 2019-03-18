@@ -9,9 +9,9 @@ namespace TextParser
     {
         public List<string> Words { get; set; } = new List<string>();
 
-        public StopListService(string text)
+        public StopListService(List<string> words)
         {
-            Words = text.RemovePunctuation().ToListWithoutEmptyEntitles();
+            Words = words
         }
 
         public List<string> Call(List<string> stopList)
