@@ -35,19 +35,7 @@ namespace View.ViewModel
 
         public string ArticleDateLineTextBox { get; set; }
 
-        public string ArticlePlacesTextBox { get; set; }
-
-        public string ArticleCompaniesTextBox { get; set; }
-
-        public string ArticleExchangesTextBox { get; set; }
-
         public string ArticleBodyTextBox { get; set; }
-
-        public string ArticleTopicsTextBox { get; set; }
-
-        public string ArticleOrgsTextBox { get; set; }
-
-        public string ArticlePeopleTextBox { get; set; }
 
         #endregion
 
@@ -94,29 +82,7 @@ namespace View.ViewModel
             ArticleAuthorTextBox = Articles[article].Article.Author;
             ArticleTitleTextBox = Articles[article].Article.Title;
             ArticleDateLineTextBox = Articles[article].Article.DateLine;
-            ArticlePlacesTextBox = GetListToString(Articles[article].Places);
-            ArticleCompaniesTextBox = GetListToString(Articles[article].Companies);
-            ArticleExchangesTextBox = GetListToString(Articles[article].Exchanges);
             ArticleBodyTextBox = Articles[article].Article.Body;
-            ArticleTopicsTextBox = GetListToString(Articles[article].Topics);
-            ArticleOrgsTextBox = GetListToString(Articles[article].Orgs);
-            ArticlePeopleTextBox = GetListToString(Articles[article].People);
-
-        }
-
-        private string GetListToString(List<string> data)
-        {
-            string temp = "";
-            if (data == null)
-            {
-                return temp;
-            }
-            foreach (var x in data)
-            {
-                temp += x + ", ";
-            }
-
-            return temp;
         }
 
         private void LoadArticlesFromCatalog()

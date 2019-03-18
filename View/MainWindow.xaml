@@ -39,31 +39,11 @@
 
                 <TextBlock Margin="0 5 0 2" Text="DateLine" TextAlignment="Center" />
                 <TextBox Padding="2" Text="{Binding ArticleDateLineTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" />
-
-                <TextBlock Margin="0 5 0 2" Text="Places" TextAlignment="Center" />
-                <TextBox Padding="2" Height="25" Text="{Binding ArticlePlacesTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
-
-                <TextBlock Margin="0 5 0 2" Text="Companies" TextAlignment="Center" />
-                <TextBox Padding="2" Height="25" Text="{Binding ArticleCompaniesTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
-
-                <TextBlock Margin="0 5 0 2" Text="Exchanges" TextAlignment="Center" />
-                <TextBox Padding="2" Height="25" Text="{Binding ArticleExchangesTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
-
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="5 0 0 0">
                 <TextBlock Margin="0 5 0 2" Text="Body" TextAlignment="Center" />
                 <TextBox Padding="2" Height="200" Text="{Binding ArticleBodyTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
-
-                <TextBlock Margin="0 5 0 2" Text="Topics" TextAlignment="Center" />
-                <TextBox Padding="2" Height="50" Text="{Binding ArticleTopicsTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
-
-                <TextBlock Margin="0 5 0 2" Text="Orgs" TextAlignment="Center" />
-                <TextBox Padding="2" Height="50" Text="{Binding ArticleOrgsTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
-
-                <TextBlock Margin="0 5 0 2" Text="People" TextAlignment="Center" />
-                <TextBox Padding="2" Height="50" Text="{Binding ArticlePeopleTextBox}" IsReadOnly="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
-
             </StackPanel>
 
         </Grid>
