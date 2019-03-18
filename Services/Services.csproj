@@ -44,5 +44,11 @@
     <Compile Include="ArticlesHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SGMParser\SGMParser.csproj">
+      <Project>{a247385d-7851-4dc6-bb22-1f7e02d7aa5e}</Project>
+      <Name>SGMParser</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
