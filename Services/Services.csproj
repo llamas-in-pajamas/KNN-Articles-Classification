@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="ArticleAnalyticsModel.cs" />
     <Compile Include="ArticlesHandler.cs" />
+    <Compile Include="IdfService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

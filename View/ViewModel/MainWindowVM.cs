@@ -19,7 +19,13 @@ namespace View.ViewModel
 {
     public class MainWindowVM : BaseVM
     {
+        #region private fields
+
         private Window _owner;
+        private ArticlesHandler _articlesHandler;
+
+        #endregion
+        
 
         public ICommand SelectCatalogButton { get; }
         public ICommand SelectStopListButton { get; }
@@ -69,8 +75,8 @@ namespace View.ViewModel
                 words = File.ReadAllLines(dialog.FileName).ToList();
             }
 
-            ArticlesHandler handler = new ArticlesHandler();
-            handler.ProcessArticles(Articles, words);
+            _articlesHandler = new ArticlesHandler();
+            _articlesHandler.ProcessArticles(Articles, words);
         }
 
 

@@ -11,14 +11,13 @@ namespace Services
 {
     public class ArticlesHandler
     {
-        public static Dictionary<string,int> IdfDictionary = new Dictionary<string, int>();
-        public static Dictionary<string,double> IdfTfFactorsDictionary = new Dictionary<string, double>();
-
-        public static List<ArticleDataModel> ArticlesDataModels = new List<ArticleDataModel>();
+        
+        public List<ArticleDataModel> ArticlesDataModels = new List<ArticleDataModel>();
 
         private StopListService _stopListService;
         private StemmingService _stemmingService = new StemmingService();
         private TermFrequencyParserService _termService;
+        private IdfService _idfService = new IdfService();
 
         public void ProcessArticles(List<ArticleModel> articles, List<string> stopList)
         {
@@ -40,7 +39,7 @@ namespace Services
 
                 Dictionary<string, double> wordFrequency = _termService.Call();
 
-                AddArticleToIdf(stemmedWords);
+//                AddArticleToIdf(stemmedWords);
 
                 ArticlesDataModels.Add(new ArticleDataModel()
                 {
@@ -48,16 +47,19 @@ namespace Services
                     StopListedWords = stopListedWords,
                     StemmedWords = stemmedWords,
                     WordFrequency = wordFrequency,
-                    IdfWordFrequency = wordFrequency
+                    IdfWordFrequency = new Dictionary<string, double>(wordFrequency)
                     
                 });
             }
-            GenerateIdfTfFactors();
-            AddTfIdfToArticlesData(ArticlesDataModels);
+
+            _idfService.Call(ref ArticlesDataModels);
+
+            /*GenerateIdfTfFactors();
+            AddTfIdfToArticlesData(ArticlesDataModels);*/
 
         }
 
-        public void AddTfIdfToArticlesData(List<ArticleDataModel> Articles)
+/*        public void AddTfIdfToArticlesData(List<ArticleDataModel> Articles)
         {
             foreach (var articleDataModel in Articles)
             {
@@ -68,18 +70,18 @@ namespace Services
                 }
                 
             }
-        }
+        }*/
 
-        public void GenerateIdfTfFactors()
+        /*public void GenerateIdfTfFactors()
         {
             double numOfArticles = ArticlesDataModels.Count;
             foreach (var i in IdfDictionary)
             {
                 IdfTfFactorsDictionary.Add(i.Key, Math.Log10(numOfArticles / i.Value));
             }
-        }
+        }*/
 
-        public void AddArticleToIdf(List<string> stemmedWords)
+        /*public void AddArticleToIdf(List<string> stemmedWords)
         {
             List<string> distinctWords = new List<string>(stemmedWords).Distinct().ToList();
             foreach (var distinctWord in distinctWords)
@@ -91,7 +93,7 @@ namespace Services
 
                 IdfDictionary[distinctWord]++;
             }
-        }
+        }*/
 
         
     }
