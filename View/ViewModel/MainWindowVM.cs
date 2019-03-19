@@ -135,6 +135,24 @@ namespace View.ViewModel
             dialog.Close();
             _owner.IsEnabled = true;
             IsEnabledStopListBTN = true;
+
+            Dictionary<string, List<ArticleModel>> places = new Dictionary<string, List<ArticleModel>>
+            {
+                { "west-germany", new List<ArticleModel>() },
+                { "usa", new List<ArticleModel>() },
+                { "france",  new List<ArticleModel>() },
+                { "uk", new List<ArticleModel>() },
+                { "canada", new List<ArticleModel>() },
+                { "japan", new List<ArticleModel>() }
+            };
+            List<string> labels = new List<string>(places.Keys);
+            foreach (ArticleModel article in Articles)
+            {
+                if(article.Places.Count != 0 && labels.Contains(article.Places?.First()))
+                {
+                    places[article.Places?.First()].Add(article);
+                }
+            }
         }
 
     }
