@@ -52,6 +52,8 @@ namespace SGMParser
                     .ToList();
                 article.Topics = ListItems.Where(n => n.ParentNode.Name.Equals("topics")).Select(t => t.InnerText)
                     .ToList();
+                article.Places = ListItems.Where(n => n.ParentNode.Name.Equals("places")).Select(t => t.InnerText)
+                    .ToList();
 
                 articles.Add(article);
             }

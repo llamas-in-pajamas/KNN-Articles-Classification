@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace TextParser
 {
@@ -8,7 +9,9 @@ namespace TextParser
 
         public StopListService(List<string> words)
         {
-            Words = words;
+
+            Words = words.Select(a => a.ToLower()).ToList();
+            
         }
 
         public List<string> Call(List<string> stopList)

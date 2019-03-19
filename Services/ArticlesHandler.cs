@@ -29,7 +29,12 @@ namespace Services
                     continue;
                 }
 
-                _stopListService = new StopListService(article.Article.Body.RemovePunctuation().ToListWithoutEmptyEntries());
+                if (article.Places.Count == 0)
+                {
+                    continue;
+                }
+
+                _stopListService = new StopListService(article.Article.Body.RemoveDigits().RemovePunctuation().RemoveSymbols().ToListWithoutEmptyEntries());
 
                 List<string> stopListedWords = _stopListService.Call(stopList);
 
