@@ -75,6 +75,30 @@ namespace View.ViewModel
                 words = File.ReadAllLines(dialog.FileName).ToList();
             }
 
+            Dictionary<string, List<string>> places = new Dictionary<string, List<string>>
+            {
+                { "west-germany", new List<string>() },
+                { "usa", new List<string>() },
+                { "france",  new List<string>() },
+                { "uk", new List<string>() },
+                { "canada", new List<string>() },
+                { "japan", new List<string>() }
+            };
+            List<string> labels = new List<string>(places.Keys);
+            foreach (ArticleModel article in Articles)
+            {
+                if (article.Places.Count != 0 && labels.Contains(article.Places?.First()) && article.Article.Body != null)
+                {
+                    places[article.Places?.First()].AddRange(
+                        article.Article.Body
+                        .RemoveDigits()
+                        .RemovePunctuation()
+                        .RemoveSymbols()
+                        .ToListWithoutEmptyEntries()
+                   );
+                }
+            }
+
             _articlesHandler = new ArticlesHandler();
             _articlesHandler.ProcessArticles(Articles, words);
         }
@@ -135,25 +159,6 @@ namespace View.ViewModel
             dialog.Close();
             _owner.IsEnabled = true;
             IsEnabledStopListBTN = true;
-
-            Dictionary<string, List<ArticleModel>> places = new Dictionary<string, List<ArticleModel>>
-            {
-                { "west-germany", new List<ArticleModel>() },
-                { "usa", new List<ArticleModel>() },
-                { "france",  new List<ArticleModel>() },
-                { "uk", new List<ArticleModel>() },
-                { "canada", new List<ArticleModel>() },
-                { "japan", new List<ArticleModel>() }
-            };
-            List<string> labels = new List<string>(places.Keys);
-            foreach (ArticleModel article in Articles)
-            {
-                if(article.Places.Count != 0 && labels.Contains(article.Places?.First()))
-                {
-                    places[article.Places?.First()].Add(article);
-                }
-            }
         }
-
     }
 }
