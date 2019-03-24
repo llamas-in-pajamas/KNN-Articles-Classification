@@ -98,15 +98,21 @@ namespace View.ViewModel
                    );
                 }
             }
-
             _articlesHandler = new ArticlesHandler();
-            _articlesHandler.ProcessArticles(Articles, words);
+            foreach (var key in labels)
+            {
+                var temp = places[key];
+                _articlesHandler.ProcessWords(ref temp, words);
+                places[key] = temp;
+
+            }
+
+            
         }
 
 
         private void LoadArticle()
         {
-            
             int article = int.Parse(ArticleNumberTextBox);
             if (article < 0 || article > Articles.Count)
             {

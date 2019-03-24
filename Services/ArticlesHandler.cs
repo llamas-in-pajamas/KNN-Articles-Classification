@@ -19,22 +19,21 @@ namespace Services
         private TermFrequencyParserService _termService;
         private IdfService _idfService = new IdfService();
 
-        public void ProcessArticles(List<ArticleModel> articles, List<string> stopList)
+        public void ProcessWords(ref List<string> articles, List<string> stopList)
         {
-            
-            foreach (ArticleModel article in articles)
+
+            _stopListService = new StopListService(articles);
+
+            List<string> stopListedWords = _stopListService.Call(stopList);
+
+            List<string> stemmedWords = _stemmingService.Call(stopListedWords);
+
+            articles = stemmedWords;
+
+            /*foreach (var article in articles)
             {
-                if (string.IsNullOrEmpty(article.Article.Body))
-                {
-                    continue;
-                }
-
-                if (article.Places.Count == 0)
-                {
-                    continue;
-                }
-
-                _stopListService = new StopListService(article.Article.Body.RemoveDigits().RemovePunctuation().RemoveSymbols().ToListWithoutEmptyEntries());
+                
+                _stopListService = new StopListService(articles);
 
                 List<string> stopListedWords = _stopListService.Call(stopList);
 
@@ -55,9 +54,9 @@ namespace Services
                     IdfWordFrequency = new Dictionary<string, double>(wordFrequency)
                     
                 });
-            }
+            }*/
 
-            _idfService.Call(ref ArticlesDataModels);
+            //_idfService.Call(ref ArticlesDataModels);
 
             /*GenerateIdfTfFactors();
             AddTfIdfToArticlesData(ArticlesDataModels);*/
