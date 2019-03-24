@@ -1,4 +1,8 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using ExtensionMethods;
+using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using Parago.Windows;
+using Services;
 using SGMParser;
 using System;
 using System.Collections.Generic;
@@ -7,12 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.Win32;
-using TextParser;
 using View.ViewModel.Base;
-using ExtensionMethods;
-using Services;
-using Parago.Windows;
 
 
 namespace View.ViewModel
@@ -25,13 +24,36 @@ namespace View.ViewModel
         private ArticlesHandler _articlesHandler;
 
         #endregion
-        
+
 
         public ICommand SelectCatalogButton { get; }
         public ICommand SelectStopListButton { get; }
         public ICommand LoadArticleButton { get; }
 
         private List<ArticleModel> Articles = new List<ArticleModel>();
+        private Dictionary<string, List<string>> _places = new Dictionary<string, List<string>>
+        {
+            { "west-germany", new List<string>()
+            },
+            { "usa", new List<string>()
+            },
+            { "france",  new List<string>() },
+            { "uk", new List<string>() },
+            { "canada", new List<string>() },
+            { "japan", new List<string>() }
+        };
+
+        private Dictionary<string, Dictionary<string, double>> _placesTermFrequency = new Dictionary<string, Dictionary<string, double>>
+        {
+            { "west-germany", new Dictionary<string, double>()
+            },
+            { "usa", new Dictionary<string, double>()
+            },
+            { "france",  new Dictionary<string, double>() },
+            { "uk", new Dictionary<string, double>() },
+            { "canada", new Dictionary<string, double>() },
+            { "japan", new Dictionary<string, double>() }
+        };
 
         #region props
 
@@ -75,21 +97,12 @@ namespace View.ViewModel
                 words = File.ReadAllLines(dialog.FileName).ToList();
             }
 
-            Dictionary<string, List<string>> places = new Dictionary<string, List<string>>
-            {
-                { "west-germany", new List<string>() },
-                { "usa", new List<string>() },
-                { "france",  new List<string>() },
-                { "uk", new List<string>() },
-                { "canada", new List<string>() },
-                { "japan", new List<string>() }
-            };
-            List<string> labels = new List<string>(places.Keys);
+            List<string> labels = new List<string>(_places.Keys);
             foreach (ArticleModel article in Articles)
             {
                 if (article.Places.Count != 0 && labels.Contains(article.Places?.First()) && article.Article.Body != null)
                 {
-                    places[article.Places?.First()].AddRange(
+                    _places[article.Places?.First()].AddRange(
                         article.Article.Body
                         .RemoveDigits()
                         .RemovePunctuation()
@@ -98,15 +111,29 @@ namespace View.ViewModel
                    );
                 }
             }
+
+
+
             _articlesHandler = new ArticlesHandler();
             foreach (var key in labels)
             {
-                var temp = places[key];
+                var temp = _places[key];
                 _articlesHandler.ProcessWords(ref temp, words);
-                places[key] = temp;
+                _places[key] = temp;
+                _placesTermFrequency[key] = _articlesHandler.GetTermFrequencies(temp);
 
             }
 
+#if DEBUG
+            sortDictionary();
+#endif
+        }
+
+        private void sortDictionary()   //method for testing purposes
+        {
+            List<KeyValuePair<string, double>> myList = _placesTermFrequency["japan"].ToList();
+
+            myList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
             
         }
 
@@ -119,7 +146,7 @@ namespace View.ViewModel
                 MessageBox.Show("Incorrect Number");
                 return;
             }
-           
+
 
             ArticleDateTextBox = Articles[article].Date;
             ArticleAuthorTextBox = Articles[article].Article.Author;
@@ -130,15 +157,15 @@ namespace View.ViewModel
 
         private async void LoadArticlesFromCatalog()
         {
-            
+
             ProgressDialog dialog = new ProgressDialog(ProgressDialogSettings.WithLabelOnly)
             {
                 Owner = _owner,
                 Label = "Loading Articles..."
             };
-            
+
             string path = "";
-            
+
             using (CommonOpenFileDialog fileDialog = new CommonOpenFileDialog())
             {
                 fileDialog.IsFolderPicker = true;
@@ -155,7 +182,7 @@ namespace View.ViewModel
             IsEnabledStopListBTN = false;
             try
             {
-                Articles = await Task.Run( () => SGMLReader.ReadAllSGMLFromDirectory(path) );
+                Articles = await Task.Run(() => SGMLReader.ReadAllSGMLFromDirectory(path));
                 SelectArticleText = $"Loaded {Articles.Count} articles! Choose one:";
             }
             catch (Exception e)
