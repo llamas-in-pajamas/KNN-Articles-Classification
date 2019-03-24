@@ -30,7 +30,7 @@ namespace View.ViewModel
         public ICommand SelectStopListButton { get; }
         public ICommand LoadArticleButton { get; }
 
-        private List<ArticleModel> Articles = new List<ArticleModel>();
+        private List<ArticleModel> _articles = new List<ArticleModel>();
         private Dictionary<string, List<string>> _places = new Dictionary<string, List<string>>
         {
             { "west-germany", new List<string>()
@@ -98,7 +98,7 @@ namespace View.ViewModel
             }
 
             List<string> labels = new List<string>(_places.Keys);
-            foreach (ArticleModel article in Articles)
+            foreach (ArticleModel article in _articles)
             {
                 if (article.Places.Count != 0 && labels.Contains(article.Places?.First()) && article.Article.Body != null)
                 {
@@ -131,9 +131,9 @@ namespace View.ViewModel
 
         private void sortDictionary()   //method for testing purposes
         {
-            List<KeyValuePair<string, double>> myList = _placesTermFrequency["japan"].ToList();
+            List<KeyValuePair<string, double>> myList = _placesTermFrequency["usa"].ToList();
 
-            myList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+            myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
             
         }
 
@@ -141,18 +141,18 @@ namespace View.ViewModel
         private void LoadArticle()
         {
             int article = int.Parse(ArticleNumberTextBox);
-            if (article < 0 || article > Articles.Count)
+            if (article < 0 || article > _articles.Count)
             {
                 MessageBox.Show("Incorrect Number");
                 return;
             }
 
 
-            ArticleDateTextBox = Articles[article].Date;
-            ArticleAuthorTextBox = Articles[article].Article.Author;
-            ArticleTitleTextBox = Articles[article].Article.Title;
-            ArticleDateLineTextBox = Articles[article].Article.DateLine;
-            ArticleBodyTextBox = Articles[article].Article.Body;
+            ArticleDateTextBox = _articles[article].Date;
+            ArticleAuthorTextBox = _articles[article].Article.Author;
+            ArticleTitleTextBox = _articles[article].Article.Title;
+            ArticleDateLineTextBox = _articles[article].Article.DateLine;
+            ArticleBodyTextBox = _articles[article].Article.Body;
         }
 
         private async void LoadArticlesFromCatalog()
@@ -182,8 +182,8 @@ namespace View.ViewModel
             IsEnabledStopListBTN = false;
             try
             {
-                Articles = await Task.Run(() => SGMLReader.ReadAllSGMLFromDirectory(path));
-                SelectArticleText = $"Loaded {Articles.Count} articles! Choose one:";
+                _articles = await Task.Run(() => SGMLReader.ReadAllSGMLFromDirectory(path));
+                SelectArticleText = $"Loaded {_articles.Count} articles! Choose one:";
             }
             catch (Exception e)
             {
