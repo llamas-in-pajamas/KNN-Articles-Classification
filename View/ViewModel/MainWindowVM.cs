@@ -133,7 +133,7 @@ namespace View.ViewModel
         {
             List<KeyValuePair<string, double>> myList = _placesTermFrequency["usa"].ToList();
 
-            myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
+            myList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
             
         }
 
