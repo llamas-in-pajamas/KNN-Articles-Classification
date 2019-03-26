@@ -3,6 +3,8 @@ mln
 year
 reuter
 pct
+bank
+market
 a
 a's
 able
