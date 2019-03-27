@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
 using View.ViewModel.Base;
 
 
@@ -20,6 +22,19 @@ namespace View.ViewModel
     public class MainWindowVM : BaseVM
     {
         #region private fields
+
+        #region Theme related fields
+        private const string RegistryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+
+        private const string RegistryValueName = "AppsUseLightTheme";
+
+        private bool _isDarkTheme;
+
+        private Brush _foreground;
+        private Brush _background;
+
+
+        #endregion
 
         private ArticlesHandler _articlesHandler;
         private List<ArticleModel> _articles;
@@ -68,7 +83,66 @@ namespace View.ViewModel
             SelectStopListButton = new RelayCommand(LoadStopList);
             SelectDefaultButton = new RelayCommand(LoadDefaultValues);
             PreProcessButton = new RelayCommand(PreProcessData);
+            ReadWindowsSetting();
+            ApplyBase(_isDarkTheme);
+            ApplyColors(_isDarkTheme);
         }
+
+        #region Theme Solvers
+
+        private void ReadWindowsSetting()
+        {
+//            var uiSettings = SystemParameters.WindowGlassBrush;
+//            var uiSettings1 = SystemParameters.WindowGlassColor;
+            
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath))
+            {
+                object registryValueObject = key?.GetValue(RegistryValueName);
+                if (registryValueObject == null)
+                {
+                    _isDarkTheme = false;
+                }
+
+                int registryValue = (int)registryValueObject;
+
+                
+                if (registryValue > 0)
+                {
+                    _isDarkTheme = false;
+                }
+                else
+                {
+                    _isDarkTheme = true;
+                }
+            }
+        }
+
+        private void ApplyBase(bool isDark)
+        {
+            new PaletteHelper().SetLightDark(isDark);
+        }
+
+        private void ApplyAccent(Swatch swatch)
+        {
+            new PaletteHelper().ReplaceAccentColor(swatch);
+        }
+
+        private void ApplyColors(bool isDark)
+        {
+            if (isDark)
+            {
+                _foreground = Brushes.White;
+                _background = (SolidColorBrush) new BrushConverter().ConvertFrom("#303030");
+                return;
+            }
+
+            _foreground = Brushes.Black;
+            _background = Brushes.White;
+        }
+
+
+        #endregion
+
 
         #region Pre-process Data Methods  
         //TODO: Finish pre-processing articles
@@ -257,9 +331,9 @@ namespace View.ViewModel
         {
             var msg = new CustomMaterialMessageBox()
             {
-                TxtMessage = { Text = text, TextAlignment = TextAlignment.Center, Foreground = Brushes.White },
-                TxtTitle = { Text = "Message", Foreground = Brushes.White },
-                MainContentControl = { Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#303030") },
+                TxtMessage = { Text = text, TextAlignment = TextAlignment.Center, Foreground = _foreground },
+                TxtTitle = { Text = "Message", Foreground = _foreground },
+                MainContentControl = { Background = _background },
                 TitleBackgroundPanel = { Background = Brushes.DarkViolet },
                 BtnCancel = { Visibility = Visibility.Collapsed },
                 BtnOk = { Background = Brushes.DarkViolet },
@@ -274,10 +348,10 @@ namespace View.ViewModel
             var msg = new CustomMaterialMessageBox()
             {
                 TxtTitle = { Text = "ERROR" },
-                TxtMessage = { Text = "Error has ocurred: " + text, Foreground = Brushes.White },
+                TxtMessage = { Text = "Error has ocurred: " + text, Foreground = _foreground },
                 TitleBackgroundPanel = { Background = (Brush)Brushes.Red },
                 BorderBrush = (Brush)Brushes.Red,
-                MainContentControl = { Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#303030") },
+                MainContentControl = { Background = _background },
                 BtnCancel = { Visibility = Visibility.Collapsed },
 
             };
