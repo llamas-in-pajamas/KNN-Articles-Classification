@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="530" Width="800"
+        Title="MainWindow" Height="650" Width="800"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:converters="clr-namespace:View.Converters"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -15,7 +15,8 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -48,7 +49,7 @@
                         </ItemsPanelTemplate>
                     </ComboBox.ItemsPanel>
                 </ComboBox>
-                <ScrollViewer Height="200" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Margin="0 10" Height="200" VerticalScrollBarVisibility="Auto">
                 <ItemsControl
                     ItemsSource="{Binding CategoryItems}"
                     Grid.IsSharedSizeScope="True"
@@ -94,6 +95,30 @@
                 </ItemsControl>
                 </ScrollViewer>
                 <Button Content="Select default values" Command="{Binding SelectDefaultButton}" />
+
+                
+                <TextBlock Text="Please select amount of learning data (%):" Margin="5 10" />
+
+                <Slider
+                    Minimum="0"
+                    Maximum="100"
+                    Style="{StaticResource MaterialDesignDiscreteSlider}"
+                    ToolTip="Amount Of Learning Data (%)"
+                    Value="{Binding AmountLearningDataSlider}"
+                    Width="250" />
+
+                <StackPanel Margin="0 10 0 0"  Orientation="Horizontal" HorizontalAlignment="Center" >
+                    <Button 
+                        Content="Pre-process Data" 
+                        Command="{Binding PreProcessButton}"
+                        IsEnabled="{Binding IsEnabledPreProcessBTN}"/>
+                    <ProgressBar
+                        Margin="20 0 0 0"
+                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                        Visibility="{Binding Path=PreprocessDataProgressVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Value="0"
+                        IsIndeterminate="True" />
+                </StackPanel>
             </StackPanel>
         </Grid>
     </Border>

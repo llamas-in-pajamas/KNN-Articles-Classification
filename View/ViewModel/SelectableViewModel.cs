@@ -12,7 +12,7 @@ namespace View
 
         public bool IsSelected
         {
-            get { return _isSelected; }
+            get => _isSelected;
             set
             {
                 if (_isSelected == value) return;
@@ -22,7 +22,7 @@ namespace View
         }
         public string Name
         {
-            get { return _name; }
+            get => _name;
             set
             {
                 if (_name == value) return;
@@ -32,7 +32,7 @@ namespace View
         }
         public int Count
         {
-            get { return _count; }
+            get => _count;
             set
             {
                 if (_count == value) return;
@@ -46,7 +46,7 @@ namespace View
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

@@ -22,6 +22,13 @@ namespace View
         {
             return articles.Where(n=>n.Categories.ContainsKey(category)).SelectMany(t => t.Categories[category]).Count(s => s.Equals(metadata));
         }
+
+        public static List<ArticleModel> GetArticlesFromCategoryAndMetadata(string category, List<string> metadatas, List<ArticleModel> articles)
+        {
+            return articles.Where(n => n.Categories.ContainsKey(category) &&
+                n.Categories[category].Count == 1  && n.Article.Body != null &&
+                metadatas.Contains(n.Categories[category][0])).ToList();
+        }
     }
 
 }

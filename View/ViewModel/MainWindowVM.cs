@@ -1,11 +1,9 @@
-﻿using ExtensionMethods;
+﻿using BespokeFusion;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using Parago.Windows;
 using Services;
 using SGMParser;
 using System;
-using System.Activities.XamlIntegration;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -14,8 +12,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using BespokeFusion;
-using MaterialDesignThemes.Wpf;
 using View.ViewModel.Base;
 
 
@@ -27,6 +23,7 @@ namespace View.ViewModel
 
         private ArticlesHandler _articlesHandler;
         private List<ArticleModel> _articles;
+        private List<ArticleModel> _filteredOutArticles;
         private List<ArticleModel> _learningArticles;
         private List<ArticleModel> _trainingArticles;
         private List<string> _stopList;
@@ -36,9 +33,10 @@ namespace View.ViewModel
         public ICommand SelectCatalogButton { get; }
         public ICommand SelectStopListButton { get; }
         public ICommand SelectDefaultButton { get; }
+        public ICommand PreProcessButton { get; }
         #region props
 
-        public bool IsEnabledStopListBTN { get; set; } = false;
+        public bool IsEnabledStopListBTN { get; set; }
         public string SelectArticleText { get; set; }
         public string SelectStopListText { get; set; }
         public bool IsArticleLoadingVisible { get; set; }
@@ -56,9 +54,11 @@ namespace View.ViewModel
                 LoadCategoryItems(value, _articles);
             }
         }
-
-
         public ObservableCollection<SelectableViewModel> CategoryItems { get; set; }
+
+        public int AmountLearningDataSlider { get; set; } = 60;
+        public bool IsEnabledPreProcessBTN { get; set; }
+        public bool PreprocessDataProgressVisibility { get; set; } 
         #endregion
 
 
@@ -67,9 +67,44 @@ namespace View.ViewModel
             SelectCatalogButton = new RelayCommand(LoadArticlesFromCatalog);
             SelectStopListButton = new RelayCommand(LoadStopList);
             SelectDefaultButton = new RelayCommand(LoadDefaultValues);
+            PreProcessButton = new RelayCommand(PreProcessData);
         }
 
-       
+        #region Pre-process Data Methods  
+        //TODO: Finish pre-processing articles
+        private void PreProcessData()
+        {
+            PreprocessDataProgressVisibility = true;
+            FilterArticles(_articles, CategoryItems.ToList(), CategoryComboboxSelected);
+            SplitArticles(AmountLearningDataSlider);
+            PreprocessDataProgressVisibility = false;
+
+        }
+
+        private void FilterArticles(List<ArticleModel> articles, List<SelectableViewModel> pickedItems, string category)
+        {
+            List<string> selected = new List<string>();
+            foreach (var selectableViewModel in pickedItems)
+            {
+                if (selectableViewModel.IsSelected)
+                {
+                    selected.Add(selectableViewModel.Name);
+                }
+            }
+
+            _filteredOutArticles =
+                ArticleMetadataExtractor.GetArticlesFromCategoryAndMetadata(category, selected, articles);
+        }
+
+        private void SplitArticles(int percentage)
+        {
+            int allArticles = _filteredOutArticles.Count;
+            int learningArticles = allArticles * percentage / 100;
+            _learningArticles = _filteredOutArticles.Take(learningArticles).ToList();
+            _trainingArticles = _filteredOutArticles.Skip(learningArticles).ToList();
+        }
+
+        #endregion
 
         private void LoadStopList()
         {
@@ -86,12 +121,13 @@ namespace View.ViewModel
                     _stopList = File.ReadAllLines(dialog.FileName).ToList();
                     SelectStopListText = $"Loaded {_stopList.Count} words!";
                     NumOfStopListVisibility = true;
+                    IsEnabledPreProcessBTN = true;
                 }
                 catch (Exception e)
                 {
                     ShowErrorMaterial(e.Message);
                 }
-                
+
             }
 
             /*List<string> labels = new List<string>(_places.Keys);
@@ -123,6 +159,7 @@ namespace View.ViewModel
 
         }
 
+
         private async void LoadArticlesFromCatalog()
         {
             string path = "";
@@ -138,25 +175,22 @@ namespace View.ViewModel
                 }
             }
 
-            IsArticleLoadingVisible = true;
-            
-            IsEnabledStopListBTN = false;
             try
             {
+                IsArticleLoadingVisible = true;
                 _articles = await Task.Run(() => SGMLReader.ReadAllSGMLFromDirectory(path));
                 SelectArticleText = $"Loaded {_articles.Count} articles!";
                 NumOfArticlesVisibility = true;
                 LoadCategories(_articles);
                 ShowMsgMaterial("Articles loaded! Now please provide stop list.");
+                IsArticleLoadingVisible = false;
+                IsEnabledStopListBTN = true;
+
             }
             catch (Exception e)
             {
                 ShowErrorMaterial(e.Message);
             }
-            
-            IsArticleLoadingVisible = false;
-            
-            IsEnabledStopListBTN = true;
         }
 
         private void LoadCategories(List<ArticleModel> articles)
@@ -189,7 +223,7 @@ namespace View.ViewModel
                 {
                     switch (selectableViewModel.Name)
                     {
-                        case "usa" :
+                        case "usa":
                             selectableViewModel.IsSelected = true;
                             break;
                         case "west-germany":
@@ -207,11 +241,11 @@ namespace View.ViewModel
                         case "japan":
                             selectableViewModel.IsSelected = true;
                             break;
-                        
+
                     }
                 }
 
-                
+
             }
             else
             {
@@ -239,8 +273,8 @@ namespace View.ViewModel
         {
             var msg = new CustomMaterialMessageBox()
             {
-                TxtTitle = { Text = "ERROR", Foreground = Brushes.White },
-                TxtMessage = { Text = "Error has ocurred: " + text },
+                TxtTitle = { Text = "ERROR" },
+                TxtMessage = { Text = "Error has ocurred: " + text, Foreground = Brushes.White },
                 TitleBackgroundPanel = { Background = (Brush)Brushes.Red },
                 BorderBrush = (Brush)Brushes.Red,
                 MainContentControl = { Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#303030") },
