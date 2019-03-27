@@ -32,28 +32,22 @@ namespace SGMParser
             {
                 ArticleModel article = new ArticleModel();
 
-                var ListItems = reuter.Descendants("D");
+                
 
                 article.Article.Author = reuter.Descendants("AUTHOR").FirstOrDefault()?.InnerText;
                 article.Article.DateLine = reuter.Descendants("DATELINE").FirstOrDefault()?.InnerText;
                 article.Article.Title = reuter.Descendants("TITLE").FirstOrDefault()?.InnerText;
                 article.Article.Body = reuter.Descendants("BODY").FirstOrDefault()?.InnerText;
                 article.Unknown = reuter.Descendants("UNKNOWN").FirstOrDefault()?.InnerText;
-
                 article.Date = reuter.Descendants("DATE").FirstOrDefault()?.InnerText;
 
-                article.Companies = ListItems.Where(n => n.ParentNode.Name.Equals("companies")).Select(t => t.InnerText)
-                    .ToList();
-                article.Exchanges = ListItems.Where(n => n.ParentNode.Name.Equals("exchanges")).Select(t => t.InnerText)
-                    .ToList();
-                article.Orgs = ListItems.Where(n => n.ParentNode.Name.Equals("orgs")).Select(t => t.InnerText)
-                    .ToList();
-                article.People = ListItems.Where(n => n.ParentNode.Name.Equals("people")).Select(t => t.InnerText)
-                    .ToList();
-                article.Topics = ListItems.Where(n => n.ParentNode.Name.Equals("topics")).Select(t => t.InnerText)
-                    .ToList();
-                article.Places = ListItems.Where(n => n.ParentNode.Name.Equals("places")).Select(t => t.InnerText)
-                    .ToList();
+                var ListItems = reuter.Descendants("D").Select(t => t.ParentNode).Distinct();
+
+                foreach (var listItem in ListItems)
+                {
+                    article.Categories.Add(listItem.Name, listItem.ChildNodes.Select(c => c.InnerText).ToList());
+                    //article.Categories[listItem.Name] = listItem.ChildNodes.Select(c => c.InnerText).ToList();
+                }
 
                 articles.Add(article);
             }

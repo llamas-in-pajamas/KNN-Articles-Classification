@@ -7,12 +7,14 @@ namespace SGMParser
     {
         public string Date { get; set; }
         public string Unknown { get; set; }
-        public List<string> Topics { get; set; }
+
+        public Dictionary<string, List<string>> Categories { get; set; } = new Dictionary<string, List<string>>();
+        /*public List<string> Topics { get; set; }
         public List<string> Places { get; set; }
         public List<string> People { get; set; }
         public List<string> Orgs { get; set; }
         public List<string> Exchanges { get; set; }
-        public List<string> Companies { get; set; }
+        public List<string> Companies { get; set; }*/
 
         public Text Article { get; set; }
 
