@@ -5,6 +5,7 @@ using Parago.Windows;
 using Services;
 using SGMParser;
 using System;
+using System.Activities.XamlIntegration;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -12,6 +13,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using BespokeFusion;
+using MaterialDesignThemes.Wpf;
 using View.ViewModel.Base;
 
 
@@ -65,6 +69,8 @@ namespace View.ViewModel
             SelectDefaultButton = new RelayCommand(LoadDefaultValues);
         }
 
+       
+
         private void LoadStopList()
         {
             _stopList = new List<string>();
@@ -83,7 +89,7 @@ namespace View.ViewModel
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"Error: {e.Message}");
+                    ShowErrorMaterial(e.Message);
                 }
                 
             }
@@ -141,10 +147,11 @@ namespace View.ViewModel
                 SelectArticleText = $"Loaded {_articles.Count} articles!";
                 NumOfArticlesVisibility = true;
                 LoadCategories(_articles);
+                ShowMsgMaterial("Articles loaded! Now please provide stop list.");
             }
             catch (Exception e)
             {
-                MessageBox.Show($"Error: {e.Message}");
+                ShowErrorMaterial(e.Message);
             }
             
             IsArticleLoadingVisible = false;
@@ -208,8 +215,40 @@ namespace View.ViewModel
             }
             else
             {
-                MessageBox.Show("Places must be selected to load default values");
+                ShowErrorMaterial("Places must be selected to load default values");
             }
+        }
+
+        private void ShowMsgMaterial(string text)
+        {
+            var msg = new CustomMaterialMessageBox()
+            {
+                TxtMessage = { Text = text, TextAlignment = TextAlignment.Center, Foreground = Brushes.White },
+                TxtTitle = { Text = "Message", Foreground = Brushes.White },
+                MainContentControl = { Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#303030") },
+                TitleBackgroundPanel = { Background = Brushes.DarkViolet },
+                BtnCancel = { Visibility = Visibility.Collapsed },
+                BtnOk = { Background = Brushes.DarkViolet },
+                BorderBrush = Brushes.DarkViolet,
+
+            };
+            msg.BtnOk.Focus();
+            msg.Show();
+        }
+        private void ShowErrorMaterial(string text)
+        {
+            var msg = new CustomMaterialMessageBox()
+            {
+                TxtTitle = { Text = "ERROR", Foreground = Brushes.White },
+                TxtMessage = { Text = "Error has ocurred: " + text },
+                TitleBackgroundPanel = { Background = (Brush)Brushes.Red },
+                BorderBrush = (Brush)Brushes.Red,
+                MainContentControl = { Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#303030") },
+                BtnCancel = { Visibility = Visibility.Collapsed },
+
+            };
+            msg.BtnOk.Focus();
+            msg.Show();
         }
 
 
