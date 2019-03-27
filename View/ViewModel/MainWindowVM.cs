@@ -36,8 +36,10 @@ namespace View.ViewModel
 
         public bool IsEnabledStopListBTN { get; set; } = false;
         public string SelectArticleText { get; set; }
+        public string SelectStopListText { get; set; }
         public bool IsArticleLoadingVisible { get; set; }
         public bool NumOfArticlesVisibility { get; set; }
+        public bool NumOfStopListVisibility { get; set; }
         public ObservableCollection<string> CategoryCombobox { get; set; }
 
         public string CategoryComboboxSelected
@@ -73,7 +75,17 @@ namespace View.ViewModel
             };
             if (dialog.ShowDialog() == true)
             {
-                _stopList = File.ReadAllLines(dialog.FileName).ToList();
+                try
+                {
+                    _stopList = File.ReadAllLines(dialog.FileName).ToList();
+                    SelectStopListText = $"Loaded {_stopList.Count} words!";
+                    NumOfStopListVisibility = true;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"Error: {e.Message}");
+                }
+                
             }
 
             /*List<string> labels = new List<string>(_places.Keys);
@@ -157,6 +169,9 @@ namespace View.ViewModel
                     Count = ArticleMetadataExtractor.GetNumberOfArticlesInCategoryForMetadata(category, item, articles)
                 });
             }
+
+            CategoryItems = new ObservableCollection<SelectableViewModel>(CategoryItems.OrderByDescending(t => t.Count).ToList());
+
         }
 
         private void LoadDefaultValues()

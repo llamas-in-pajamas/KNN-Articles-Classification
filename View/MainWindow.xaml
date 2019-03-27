@@ -33,8 +33,9 @@
 
                 <ProgressBar
                     IsIndeterminate="True" Visibility="{Binding Path=IsArticleLoadingVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                <TextBlock FontWeight="Bold" Grid.Column="0" Text="{Binding SelectArticleText}" Visibility="{Binding Path=NumOfArticlesVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <TextBlock FontWeight="Bold" Text="{Binding SelectArticleText}" Visibility="{Binding Path=NumOfArticlesVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <Button Grid.Column="1" Margin="5" Content="Select stop list" Command="{Binding SelectStopListButton}" IsEnabled="{Binding IsEnabledStopListBTN}" />
+                <TextBlock FontWeight="Bold" Text="{Binding SelectStopListText}" Visibility="{Binding Path=NumOfStopListVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <TextBlock Text="Select metadata to process:" TextAlignment="Center" Margin="0 5" />
                 <ComboBox Grid.Column="1" 
                           materialDesign:HintAssist.Hint="Category"
