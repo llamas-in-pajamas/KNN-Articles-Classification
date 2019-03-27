@@ -79,6 +79,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\EnumMatchToBooleanConverter.cs" />
     <Compile Include="Helper\ArticleMetadataExtractor.cs" />
+    <Compile Include="ViewModel\SelectableViewModel.cs" />
     <Compile Include="ProgressDialog\Core\WindowSettings.cs" />
     <Compile Include="ProgressDialog\ProgressDialog\ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>

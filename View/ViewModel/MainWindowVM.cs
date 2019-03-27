@@ -21,34 +21,46 @@ namespace View.ViewModel
     {
         #region private fields
 
-        private Window _owner;
         private ArticlesHandler _articlesHandler;
         private List<ArticleModel> _articles;
         private List<ArticleModel> _learningArticles;
         private List<ArticleModel> _trainingArticles;
         private List<string> _stopList;
-        
+        private string _categoryComboboxSelected;
 
         #endregion
         public ICommand SelectCatalogButton { get; }
         public ICommand SelectStopListButton { get; }
+        public ICommand SelectDefaultButton { get; }
         #region props
 
         public bool IsEnabledStopListBTN { get; set; } = false;
         public string SelectArticleText { get; set; }
         public bool IsArticleLoadingVisible { get; set; }
         public bool NumOfArticlesVisibility { get; set; }
-        public ObservableCollection<string> MetadataCombobox { get; set; } = new ObservableCollection<string>();
-        public string MetadataComboboxSelected { get; set; }
+        public ObservableCollection<string> CategoryCombobox { get; set; }
+
+        public string CategoryComboboxSelected
+        {
+            get => _categoryComboboxSelected;
+            set
+            {
+                OnPropertyChanged(nameof(CategoryComboboxSelected));
+                _categoryComboboxSelected = value;
+                LoadCategoryItems(value, _articles);
+            }
+        }
+
+
+        public ObservableCollection<SelectableViewModel> CategoryItems { get; set; }
         #endregion
 
 
-        public MainWindowVM(Window owner)
+        public MainWindowVM()
         {
             SelectCatalogButton = new RelayCommand(LoadArticlesFromCatalog);
             SelectStopListButton = new RelayCommand(LoadStopList);
-            _owner = owner;
-            
+            SelectDefaultButton = new RelayCommand(LoadDefaultValues);
         }
 
         private void LoadStopList()
@@ -95,13 +107,6 @@ namespace View.ViewModel
 
         private async void LoadArticlesFromCatalog()
         {
-
-            /*ProgressDialog dialog = new ProgressDialog(ProgressDialogSettings.WithLabelOnly)
-            {
-                Owner = _owner,
-                Label = "Loading Articles..."
-            };*/
-
             string path = "";
 
             using (CommonOpenFileDialog fileDialog = new CommonOpenFileDialog())
@@ -116,23 +121,82 @@ namespace View.ViewModel
             }
 
             IsArticleLoadingVisible = true;
-            //dialog.Show();
-            _owner.IsEnabled = true;
+            
             IsEnabledStopListBTN = false;
             try
             {
                 _articles = await Task.Run(() => SGMLReader.ReadAllSGMLFromDirectory(path));
                 SelectArticleText = $"Loaded {_articles.Count} articles!";
                 NumOfArticlesVisibility = true;
+                LoadCategories(_articles);
             }
             catch (Exception e)
             {
                 MessageBox.Show($"Error: {e.Message}");
             }
-            //dialog.Close();
+            
             IsArticleLoadingVisible = false;
-            _owner.IsEnabled = true;
+            
             IsEnabledStopListBTN = true;
         }
+
+        private void LoadCategories(List<ArticleModel> articles)
+        {
+            CategoryCombobox = new ObservableCollection<string>(ArticleMetadataExtractor.GetCategories(articles));
+        }
+
+        private void LoadCategoryItems(string category, List<ArticleModel> articles)
+        {
+            CategoryItems = new ObservableCollection<SelectableViewModel>();
+            var items = ArticleMetadataExtractor.GetCategoryItems(category, articles);
+            foreach (var item in items)
+            {
+                CategoryItems.Add(new SelectableViewModel()
+                {
+                    Name = item,
+                    Count = ArticleMetadataExtractor.GetNumberOfArticlesInCategoryForMetadata(category, item, articles)
+                });
+            }
+        }
+
+        private void LoadDefaultValues()
+        {
+            if (CategoryComboboxSelected == "places")
+            {
+                foreach (var selectableViewModel in CategoryItems)
+                {
+                    switch (selectableViewModel.Name)
+                    {
+                        case "usa" :
+                            selectableViewModel.IsSelected = true;
+                            break;
+                        case "west-germany":
+                            selectableViewModel.IsSelected = true;
+                            break;
+                        case "france":
+                            selectableViewModel.IsSelected = true;
+                            break;
+                        case "uk":
+                            selectableViewModel.IsSelected = true;
+                            break;
+                        case "canada":
+                            selectableViewModel.IsSelected = true;
+                            break;
+                        case "japan":
+                            selectableViewModel.IsSelected = true;
+                            break;
+                        
+                    }
+                }
+
+                
+            }
+            else
+            {
+                MessageBox.Show("Places must be selected to load default values");
+            }
+        }
+
+
     }
 }
