@@ -120,11 +120,13 @@
                             Width="250" />
 
                                 <StackPanel Margin="0 10 0 0"  Orientation="Horizontal" HorizontalAlignment="Center" >
-                                    <Button 
+                            <Button 
                                 Content="Pre-process Data" 
+                                ToolTip="During this process data will be filtered, stemmed, stop-listed and key words selected"
+                                
                                 Command="{Binding PreProcessButton}"
                                 IsEnabled="{Binding IsEnabledPreProcessBTN}"/>
-                                    <ProgressBar
+                            <ProgressBar
                                 Margin="20 0 0 0"
                                 Style="{StaticResource MaterialDesignCircularProgressBar}"
                                 Visibility="{Binding Path=PreprocessDataProgressVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -28,7 +29,7 @@ namespace View.ViewModel
 
         private const string RegistryValueName = "AppsUseLightTheme";
 
-        private bool _isDarkTheme;
+        private bool _isDarkTheme = true;
 
         private Brush _foreground;
         private Brush _background;
@@ -43,6 +44,9 @@ namespace View.ViewModel
         private List<ArticleModel> _trainingArticles;
         private List<string> _stopList;
         private string _categoryComboboxSelected;
+
+        private string _errorMessage;
+
 
         #endregion
         public ICommand SelectCatalogButton { get; }
@@ -146,11 +150,34 @@ namespace View.ViewModel
 
         #region Pre-process Data Methods  
         //TODO: Finish pre-processing articles
-        private void PreProcessData()
+        private async void PreProcessData()
         {
             PreprocessDataProgressVisibility = true;
-            FilterArticles(_articles, CategoryItems.ToList(), CategoryComboboxSelected);
-            SplitArticles(AmountLearningDataSlider);
+            bool success = false;
+            await Task.Run(() =>
+            {
+                try
+                {
+                    FilterArticles(_articles, CategoryItems.ToList(), CategoryComboboxSelected);
+                    SplitArticles(AmountLearningDataSlider);
+
+                    success = true;
+                }
+                catch (Exception e)
+                {
+                    _errorMessage = e.Message;
+                }
+            }
+            );
+            if (!success)
+            {
+                ShowErrors();
+            }
+            else
+            {
+                ShowMsgMaterial("Pre-processing complete!");
+            }
+            
             PreprocessDataProgressVisibility = false;
 
         }
@@ -237,7 +264,7 @@ namespace View.ViewModel
         private async void LoadArticlesFromCatalog()
         {
             string path = "";
-
+            IsArticleLoadingVisible = true;
             using (CommonOpenFileDialog fileDialog = new CommonOpenFileDialog())
             {
                 fileDialog.IsFolderPicker = true;
@@ -249,31 +276,37 @@ namespace View.ViewModel
                 }
             }
 
-            try
+            bool success = false;
+
+            await Task.Run(() =>
             {
-                if (string.IsNullOrEmpty(path)) throw new ArgumentException("Path can't be empty");
-                IsArticleLoadingVisible = true;
-                await Task.Run(() =>
+                try
                 {
                     _articles = SGMLReader.ReadAllSGMLFromDirectory(path);
-                });
+                    SelectArticleText = $"Loaded {_articles.Count} articles!";
+                    NumOfArticlesVisibility = true;
+                    LoadCategories(_articles);
+                    success = true;
+                    IsEnabledStopListBTN = true;
+                }
+                catch (Exception e)
+                {
+                    _errorMessage = e.Message;
+                }
 
+            });
 
-                SelectArticleText = $"Loaded {_articles.Count} articles!";
-                NumOfArticlesVisibility = true;
-
-                LoadCategories(_articles);
-
-                ShowMsgMaterial("Articles loaded! Now please provide stop list.");
-
-                IsArticleLoadingVisible = false;
-                IsEnabledStopListBTN = true;
-
-            }
-            catch (Exception e)
+            if (success)
             {
-                ShowErrorMaterial(e.Message);
+                ShowMsgMaterial("Articles loaded! Now please provide stop list.");
             }
+            else
+            {
+                ShowErrors();
+            }
+
+            IsArticleLoadingVisible = false;
+
         }
 
         private void LoadCategories(List<ArticleModel> articles)
@@ -324,7 +357,6 @@ namespace View.ViewModel
                         case "japan":
                             selectableViewModel.IsSelected = true;
                             break;
-
                     }
                 }
 
@@ -365,6 +397,15 @@ namespace View.ViewModel
             };
             msg.BtnOk.Focus();
             msg.Show();
+        }
+
+        private void ShowErrors()
+        {
+            if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                ShowErrorMaterial(_errorMessage);
+                _errorMessage = null;
+            }
         }
     }
 }
