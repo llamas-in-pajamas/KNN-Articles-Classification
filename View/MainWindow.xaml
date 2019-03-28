@@ -8,6 +8,7 @@
         Title="MainWindow" Height="650" Width="800"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:converters="clr-namespace:View.Converters"
+        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -24,102 +25,118 @@
     </Window.Resources>
 
     <Border Padding="10">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
 
-                <Button Grid.Column="1" Margin="5" Content="Select catalog to load articles" Command="{Binding SelectCatalogButton}" />
+        <StackPanel>
 
-                <ProgressBar
-                    IsIndeterminate="True" Visibility="{Binding Path=IsArticleLoadingVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                <TextBlock FontWeight="Bold" Text="{Binding SelectArticleText}" Visibility="{Binding Path=NumOfArticlesVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                <Button  Margin="5" Content="Select stop list" Command="{Binding SelectStopListButton}" IsEnabled="{Binding IsEnabledStopListBTN}" />
-                <TextBlock FontWeight="Bold" Text="{Binding SelectStopListText}" Visibility="{Binding Path=NumOfStopListVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                <TextBlock Text="Select metadata to process:" TextAlignment="Center" Margin="0 5" />
-                <ComboBox 
-                          materialDesign:HintAssist.Hint="Category"
-                          ItemsSource="{Binding Path=CategoryCombobox}" 
-                          SelectedValue="{Binding Path=CategoryComboboxSelected}">
-                    <ComboBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </ComboBox.ItemsPanel>
-                </ComboBox>
-                <ScrollViewer Margin="0 10" Height="200" VerticalScrollBarVisibility="Auto">
-                <ItemsControl
-                    ItemsSource="{Binding CategoryItems}"
-                    Grid.IsSharedSizeScope="True"
-                    Margin="0 0 12 0">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate
-                            DataType="{x:Type local:SelectableViewModel}">
-                            <Border
-                                x:Name="Border"
-                                Padding="5">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition
-                                            SharedSizeGroup="Checkerz" />
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
-                                    <CheckBox
-                                        VerticalAlignment="Center"
-                                        IsChecked="{Binding IsSelected}" />
-                                    <StackPanel
-                                        Margin="8 0 0 0"
-                                        Grid.Column="1">
-                                        <TextBlock
-                                            FontWeight="Bold"
-                                            Text="{Binding Name}" />
-                                        <TextBlock
-                                            Text="{Binding Count}" />
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                            <DataTemplate.Triggers>
-                                <DataTrigger
-                                    Binding="{Binding IsSelected}"
-                                    Value="True">
-                                    <Setter
-                                        TargetName="Border"
-                                        Property="Background"
-                                        Value="{DynamicResource MaterialDesignSelection}" />
-                                </DataTrigger>
-                            </DataTemplate.Triggers>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                </ScrollViewer>
-                <Button Content="Select default values" Command="{Binding SelectDefaultButton}" />
+                <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4*" />
+                            <ColumnDefinition Width="7*" />
+                        </Grid.ColumnDefinitions>
 
-                
-                <TextBlock Text="Please select amount of learning data (%):" Margin="5 10" />
 
-                <Slider
-                    Minimum="0"
-                    Maximum="100"
-                    Style="{StaticResource MaterialDesignDiscreteSlider}"
-                    ToolTip="Amount Of Learning Data (%)"
-                    Value="{Binding AmountLearningDataSlider}"
-                    Width="250" />
+                        <materialDesign:ColorZone
+                                Padding="9"
+                                CornerRadius="5"
+                                VerticalAlignment="Stretch"
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                Margin="5 10">
 
-                <StackPanel Margin="0 10 0 0"  Orientation="Horizontal" HorizontalAlignment="Center" >
-                    <Button 
-                        Content="Pre-process Data" 
-                        Command="{Binding PreProcessButton}"
-                        IsEnabled="{Binding IsEnabledPreProcessBTN}"/>
-                    <ProgressBar
-                        Margin="20 0 0 0"
-                        Style="{StaticResource MaterialDesignCircularProgressBar}"
-                        Visibility="{Binding Path=PreprocessDataProgressVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
-                        Value="0"
-                        IsIndeterminate="True" />
-                </StackPanel>
-            </StackPanel>
-        </Grid>
+                            <StackPanel Grid.Column="0">
+                                <Button Grid.Column="1" Margin="5" Content="Select catalog to load articles" Command="{Binding SelectCatalogButton}" />
+
+                                <ProgressBar
+                            IsIndeterminate="True" Visibility="{Binding Path=IsArticleLoadingVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <TextBlock FontWeight="Bold" Text="{Binding SelectArticleText}" Visibility="{Binding Path=NumOfArticlesVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button  Margin="5" Content="Select stop list" Command="{Binding SelectStopListButton}" IsEnabled="{Binding IsEnabledStopListBTN}" />
+                                <TextBlock FontWeight="Bold" Text="{Binding SelectStopListText}" Visibility="{Binding Path=NumOfStopListVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <TextBlock Text="Select metadata to process:" TextAlignment="Center" Margin="0 5" />
+                                <ComboBox 
+                                  materialDesign:HintAssist.Hint="Category"
+                                  ItemsSource="{Binding Path=CategoryCombobox}" 
+                                  SelectedValue="{Binding Path=CategoryComboboxSelected}">
+                                    <ComboBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel />
+                                        </ItemsPanelTemplate>
+                                    </ComboBox.ItemsPanel>
+                                </ComboBox>
+                                <ScrollViewer Margin="0 10" Height="200" VerticalScrollBarVisibility="Auto">
+                                    <ItemsControl
+                            ItemsSource="{Binding CategoryItems}"
+                            Grid.IsSharedSizeScope="True"
+                            Margin="0 0 12 0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate
+                                    DataType="{x:Type local:SelectableViewModel}">
+                                                <Border
+                                        x:Name="Border"
+                                        Padding="5">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition
+                                                    SharedSizeGroup="Checkerz" />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <CheckBox
+                                                VerticalAlignment="Center"
+                                                IsChecked="{Binding IsSelected}" />
+                                                        <StackPanel
+                                                Margin="8 0 0 0"
+                                                Grid.Column="1">
+                                                            <TextBlock
+                                                    FontWeight="Bold"
+                                                    Text="{Binding Name}" />
+                                                            <TextBlock
+                                                    Text="{Binding Count}" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger
+                                            Binding="{Binding IsSelected}"
+                                            Value="True">
+                                                        <Setter
+                                                TargetName="Border"
+                                                Property="Background"
+                                                Value="{DynamicResource MaterialDesignSelection}" />
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                                <Button Content="Select default values" Command="{Binding SelectDefaultButton}" />
+
+
+                                <TextBlock TextWrapping="Wrap" Text="Please select amount of learning data (%):" Margin="5 10" />
+
+                                <Slider
+                            Minimum="0"
+                            Maximum="100"
+                            Style="{StaticResource MaterialDesignDiscreteSlider}"
+                            ToolTip="Amount Of Learning Data (%)"
+                            Value="{Binding AmountLearningDataSlider}"
+                            Width="250" />
+
+                                <StackPanel Margin="0 10 0 0"  Orientation="Horizontal" HorizontalAlignment="Center" >
+                                    <Button 
+                                Content="Pre-process Data" 
+                                Command="{Binding PreProcessButton}"
+                                IsEnabled="{Binding IsEnabledPreProcessBTN}"/>
+                                    <ProgressBar
+                                Margin="20 0 0 0"
+                                Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                Visibility="{Binding Path=PreprocessDataProgressVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Value="0"
+                                IsIndeterminate="True" />
+                                </StackPanel>
+                            </StackPanel>
+
+                        </materialDesign:ColorZone>
+                    </Grid>
+        </StackPanel>
+
+
     </Border>
 </Window>

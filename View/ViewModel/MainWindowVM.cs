@@ -1,4 +1,6 @@
 ﻿using BespokeFusion;
+using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Services;
@@ -12,8 +14,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using MaterialDesignColors;
-using MaterialDesignThemes.Wpf;
 using View.ViewModel.Base;
 
 
@@ -73,7 +73,7 @@ namespace View.ViewModel
 
         public int AmountLearningDataSlider { get; set; } = 60;
         public bool IsEnabledPreProcessBTN { get; set; }
-        public bool PreprocessDataProgressVisibility { get; set; } 
+        public bool PreprocessDataProgressVisibility { get; set; }
         #endregion
 
 
@@ -92,9 +92,9 @@ namespace View.ViewModel
 
         private void ReadWindowsSetting()
         {
-//            var uiSettings = SystemParameters.WindowGlassBrush;
-//            var uiSettings1 = SystemParameters.WindowGlassColor;
-            
+            //            var uiSettings = SystemParameters.WindowGlassBrush;
+            //            var uiSettings1 = SystemParameters.WindowGlassColor;
+
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath))
             {
                 object registryValueObject = key?.GetValue(RegistryValueName);
@@ -105,7 +105,7 @@ namespace View.ViewModel
 
                 int registryValue = (int)registryValueObject;
 
-                
+
                 if (registryValue > 0)
                 {
                     _isDarkTheme = false;
@@ -132,7 +132,7 @@ namespace View.ViewModel
             if (isDark)
             {
                 _foreground = Brushes.White;
-                _background = (SolidColorBrush) new BrushConverter().ConvertFrom("#303030");
+                _background = (SolidColorBrush)new BrushConverter().ConvertFrom("#303030");
                 return;
             }
 
@@ -251,12 +251,21 @@ namespace View.ViewModel
 
             try
             {
+                if (string.IsNullOrEmpty(path)) throw new ArgumentException("Path can't be empty");
                 IsArticleLoadingVisible = true;
-                _articles = await Task.Run(() => SGMLReader.ReadAllSGMLFromDirectory(path));
+                await Task.Run(() =>
+                {
+                    _articles = SGMLReader.ReadAllSGMLFromDirectory(path);
+                });
+
+
                 SelectArticleText = $"Loaded {_articles.Count} articles!";
                 NumOfArticlesVisibility = true;
+
                 LoadCategories(_articles);
+
                 ShowMsgMaterial("Articles loaded! Now please provide stop list.");
+
                 IsArticleLoadingVisible = false;
                 IsEnabledStopListBTN = true;
 
@@ -319,7 +328,6 @@ namespace View.ViewModel
                     }
                 }
 
-
             }
             else
             {
@@ -358,7 +366,5 @@ namespace View.ViewModel
             msg.BtnOk.Focus();
             msg.Show();
         }
-
-
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using View.ViewModel.Base;
 
 namespace View
 {
-    public class SelectableViewModel : INotifyPropertyChanged
+    public class SelectableViewModel : BaseVM
     {
         private bool _isSelected;
         private string _name;
@@ -40,14 +41,7 @@ namespace View
                 OnPropertyChanged();
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        
     }
 
 }
