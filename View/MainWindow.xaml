@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="650" Width="800"
+        Title="MainWindow" Height="650" Width="850"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:converters="clr-namespace:View.Converters"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
@@ -17,20 +17,19 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
+       >
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <converters:EnumMatchToBooleanConverter x:Key="enumConverter" />
     </Window.Resources>
 
     <Border Padding="10">
 
-        <StackPanel>
+        
 
-                <Grid>
+                <Grid Height="auto">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="4*" />
+                            <ColumnDefinition Width="5*" />
                             <ColumnDefinition Width="7*" />
                         </Grid.ColumnDefinitions>
 
@@ -42,7 +41,7 @@
                                 materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                 Margin="5 10">
 
-                            <StackPanel Grid.Column="0">
+                            <StackPanel Height="auto" Grid.Column="0">
                                 <Button Grid.Column="1" Margin="5" Content="Select catalog to load articles" Command="{Binding SelectCatalogButton}" />
 
                                 <ProgressBar
@@ -120,7 +119,15 @@
                             Width="250" />
 
                                 <StackPanel Margin="0 10 0 0"  Orientation="Horizontal" HorizontalAlignment="Center" >
-                            <Button 
+                                    <TextBox
+                                        materialDesign:HintAssist.Hint="Num of Key-words"
+                                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                        Text="{Binding NumberOfKeyWordsTB}"
+                                        
+                                        />
+                            <Button
+                                Margin="10 0 0 0"
+                                Width="140"
                                 Content="Pre-process Data" 
                                 ToolTip="During this process data will be filtered, stemmed, stop-listed and key words selected"
                                 
@@ -137,8 +144,7 @@
 
                         </materialDesign:ColorZone>
                     </Grid>
-        </StackPanel>
-
+        
 
     </Border>
 </Window>

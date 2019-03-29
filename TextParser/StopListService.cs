@@ -9,9 +9,7 @@ namespace TextParser
 
         public StopListService(List<string> words)
         {
-
             Words = words.Select(a => a.ToLower()).ToList();
-            
         }
 
         public List<string> Call(List<string> stopList)

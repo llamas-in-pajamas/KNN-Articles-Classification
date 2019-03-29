@@ -78,6 +78,7 @@ namespace View.ViewModel
         public int AmountLearningDataSlider { get; set; } = 60;
         public bool IsEnabledPreProcessBTN { get; set; }
         public bool PreprocessDataProgressVisibility { get; set; }
+        public int NumberOfKeyWordsTB { get; set; }
         #endregion
 
 
@@ -328,7 +329,6 @@ namespace View.ViewModel
             }
 
             CategoryItems = new ObservableCollection<SelectableViewModel>(CategoryItems.OrderByDescending(t => t.Count).ToList());
-
         }
 
         private void LoadDefaultValues()
@@ -366,6 +366,10 @@ namespace View.ViewModel
                 ShowErrorMaterial("Places must be selected to load default values");
             }
         }
+
+        #region MessageBox Section
+
+        
 
         private void ShowMsgMaterial(string text)
         {
@@ -407,5 +411,7 @@ namespace View.ViewModel
                 _errorMessage = null;
             }
         }
+        #endregion
+
     }
 }

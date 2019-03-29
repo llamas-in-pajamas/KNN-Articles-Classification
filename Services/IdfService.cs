@@ -13,7 +13,7 @@ namespace Services
         {
             AddArticlesToIdf(articles);
             GenerateIdfTfFactors(articles);
-            InsertIdfFactorsIntoArticles(ref articles);
+            //InsertIdfFactorsIntoArticles(ref articles);
         }
 
         private void AddArticlesToIdf(List<ArticleDataModel> articles)
@@ -43,7 +43,7 @@ namespace Services
             }
         }
 
-        private void InsertIdfFactorsIntoArticles(ref List<ArticleDataModel> articles)
+        /*private void InsertIdfFactorsIntoArticles(ref List<ArticleDataModel> articles)
         {
             foreach (var articleDataModel in articles)
             {
@@ -55,6 +55,6 @@ namespace Services
                 }
 
             }
-        }
+        }*/
     }
 }
