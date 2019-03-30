@@ -91,7 +91,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\EnumMatchToBooleanConverter.cs" />
+    <Compile Include="Converters\ExpandedConverter.cs" />
     <Compile Include="Helper\ArticleMetadataExtractor.cs" />
+    <Compile Include="Helper\ExpandedValues.cs" />
     <Compile Include="ViewModel\KeyWordsVM.cs" />
     <Compile Include="ViewModel\SelectableVM.cs" />
     <Compile Include="ProgressDialog\Core\WindowSettings.cs" />

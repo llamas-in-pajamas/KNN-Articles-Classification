@@ -48,7 +48,7 @@ namespace View.ViewModel
         private Dictionary<string, List<string>> _keyWords;
 
         private string _errorMessage;
-
+        private string _currentExpanded;
 
         #endregion
         public ICommand SelectCatalogButton { get; }
@@ -68,7 +68,25 @@ namespace View.ViewModel
         public int NumberOfLearningArticlesTB { get; set; }
         public int NumberOfTrainingArticlesTB { get; set; }
 
-        public bool KeyWordsIsExpanded { get; set; }
+        public string CurrentExpanded
+        {
+            get => _currentExpanded;
+            set
+            {
+                if (_currentExpanded == value)
+                {
+                    _currentExpanded = ExpandedValues.None;
+                    
+                }
+                else
+                {
+                    _currentExpanded = value;
+                }
+                OnPropertyChanged(nameof(CurrentExpanded));
+                
+            }
+        }
+
         public bool KeyWordsIsEnabled { get; set; }
 
         public string CategoryComboboxSelected
@@ -163,7 +181,7 @@ namespace View.ViewModel
         private async void PreProcessData()
         {
             PreprocessDataProgressVisibility = true;
-            KeyWordsIsExpanded = false;
+            CurrentExpanded = ExpandedValues.None;
             KeyWordsIsEnabled = false;
             bool success = false;
             await Task.Run(() =>
@@ -191,9 +209,10 @@ namespace View.ViewModel
             else
             {
                 LoadKeyWordsToGui();
-                KeyWordsIsExpanded = true;
+                
                 KeyWordsIsEnabled = true;
                 ShowMsgMaterial("Pre-processing complete!");
+                CurrentExpanded = ExpandedValues.KeyWords;
             }
             
             PreprocessDataProgressVisibility = false;
