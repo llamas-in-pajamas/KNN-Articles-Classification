@@ -7,15 +7,11 @@ using Iveonik.Stemmers;
 
 namespace TextParser
 {
-    public class StemmingService
+    public static class StemmingService
     {
-        private IStemmer Stemmer { get; set; }
-        public StemmingService()
-        {
-            Stemmer = new EnglishStemmer();
-        }
-
-        public List<string> Call(List<string> words)
+        private static IStemmer Stemmer { get; set; } = new EnglishStemmer();
+        
+        public static List<string> Call(List<string> words)
         {
             List<string> stemmedWords = new List<string>();
             foreach (string word in words)

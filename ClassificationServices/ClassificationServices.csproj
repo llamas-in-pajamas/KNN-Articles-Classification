@@ -41,8 +41,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassificationModel.cs" />
+    <Compile Include="ClassificationHelpers.cs" />
     <Compile Include="KnnClassifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExtensionMethods\ExtensionMethods.csproj">
+      <Project>{886faba1-3335-47f9-9297-f2c14929febd}</Project>
+      <Name>ExtensionMethods</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Services\Services.csproj">
+      <Project>{043802be-f9ab-4def-aa83-0b56ccc4e380}</Project>
+      <Name>Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SGMParser\SGMParser.csproj">
+      <Project>{a247385d-7851-4dc6-bb22-1f7e02d7aa5e}</Project>
+      <Name>SGMParser</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

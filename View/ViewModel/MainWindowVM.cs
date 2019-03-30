@@ -1,4 +1,5 @@
 ﻿using BespokeFusion;
+using ClassificationServices;
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -37,13 +39,13 @@ namespace View.ViewModel
 
         #endregion
 
-        private ArticlesHandler _articlesHandler;
         private List<ArticleModel> _articles;
         private List<ArticleModel> _filteredOutArticles;
         private List<ArticleModel> _learningArticles;
-        private List<ArticleModel> _trainingArticles;
+        private List<ClassificationModel> _trainingArticles;
         private List<string> _stopList;
         private string _categoryComboboxSelected;
+        private Dictionary<string, List<string>> _keyWords;
 
         private string _errorMessage;
 
@@ -63,6 +65,12 @@ namespace View.ViewModel
         public bool NumOfStopListVisibility { get; set; }
         public ObservableCollection<string> CategoryCombobox { get; set; }
 
+        public int NumberOfLearningArticlesTB { get; set; }
+        public int NumberOfTrainingArticlesTB { get; set; }
+
+        public bool KeyWordsIsExpanded { get; set; }
+        public bool KeyWordsIsEnabled { get; set; }
+
         public string CategoryComboboxSelected
         {
             get => _categoryComboboxSelected;
@@ -73,12 +81,13 @@ namespace View.ViewModel
                 LoadCategoryItems(value, _articles);
             }
         }
-        public ObservableCollection<SelectableViewModel> CategoryItems { get; set; }
+        public ObservableCollection<SelectableVM> CategoryItems { get; set; }
+        public ObservableCollection<KeyWordsVM> KeyWordsItems { get; set; }
 
         public int AmountLearningDataSlider { get; set; } = 60;
         public bool IsEnabledPreProcessBTN { get; set; }
         public bool PreprocessDataProgressVisibility { get; set; }
-        public int NumberOfKeyWordsTB { get; set; }
+        public int NumberOfKeyWordsTB { get; set; } = 8;
         #endregion
 
 
@@ -154,6 +163,8 @@ namespace View.ViewModel
         private async void PreProcessData()
         {
             PreprocessDataProgressVisibility = true;
+            KeyWordsIsExpanded = false;
+            KeyWordsIsEnabled = false;
             bool success = false;
             await Task.Run(() =>
             {
@@ -161,7 +172,9 @@ namespace View.ViewModel
                 {
                     FilterArticles(_articles, CategoryItems.ToList(), CategoryComboboxSelected);
                     SplitArticles(AmountLearningDataSlider);
-
+                    NumberOfLearningArticlesTB = _learningArticles.Count;
+                    NumberOfTrainingArticlesTB = _trainingArticles.Count;
+                    _keyWords = KeyWordsExtractor.GetKeyWordsAllWordsTF(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList);
                     success = true;
                 }
                 catch (Exception e)
@@ -173,9 +186,13 @@ namespace View.ViewModel
             if (!success)
             {
                 ShowErrors();
+                
             }
             else
             {
+                LoadKeyWordsToGui();
+                KeyWordsIsExpanded = true;
+                KeyWordsIsEnabled = true;
                 ShowMsgMaterial("Pre-processing complete!");
             }
             
@@ -183,7 +200,24 @@ namespace View.ViewModel
 
         }
 
-        private void FilterArticles(List<ArticleModel> articles, List<SelectableViewModel> pickedItems, string category)
+        private void LoadKeyWordsToGui()
+        {
+            KeyWordsItems = new ObservableCollection<KeyWordsVM>();
+            foreach (var keyWord in _keyWords)
+            {
+                foreach (var VARIABLE in keyWord.Value)
+                {
+                    KeyWordsItems.Add(new KeyWordsVM()
+                {
+                    Tag = keyWord.Key,
+                    Word = VARIABLE
+                });
+                }
+                
+            }
+        }
+
+        private void FilterArticles(List<ArticleModel> articles, List<SelectableVM> pickedItems, string category)
         {
             List<string> selected = new List<string>();
             foreach (var selectableViewModel in pickedItems)
@@ -203,7 +237,7 @@ namespace View.ViewModel
             int allArticles = _filteredOutArticles.Count;
             int learningArticles = allArticles * percentage / 100;
             _learningArticles = _filteredOutArticles.Take(learningArticles).ToList();
-            _trainingArticles = _filteredOutArticles.Skip(learningArticles).ToList();
+            _trainingArticles = ClassificationHelpers.ConvertToClassificationModels(_filteredOutArticles.Skip(learningArticles).ToList(),CategoryComboboxSelected,_stopList);
         }
 
         #endregion
@@ -317,18 +351,18 @@ namespace View.ViewModel
 
         private void LoadCategoryItems(string category, List<ArticleModel> articles)
         {
-            CategoryItems = new ObservableCollection<SelectableViewModel>();
+            CategoryItems = new ObservableCollection<SelectableVM>();
             var items = ArticleMetadataExtractor.GetCategoryItems(category, articles);
             foreach (var item in items)
             {
-                CategoryItems.Add(new SelectableViewModel()
+                CategoryItems.Add(new SelectableVM()
                 {
                     Name = item,
                     Count = ArticleMetadataExtractor.GetNumberOfArticlesInCategoryForMetadata(category, item, articles)
                 });
             }
 
-            CategoryItems = new ObservableCollection<SelectableViewModel>(CategoryItems.OrderByDescending(t => t.Count).ToList());
+            CategoryItems = new ObservableCollection<SelectableVM>(CategoryItems.OrderByDescending(t => t.Count).ToList());
         }
 
         private void LoadDefaultValues()

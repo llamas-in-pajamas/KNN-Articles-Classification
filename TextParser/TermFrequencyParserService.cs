@@ -18,6 +18,7 @@ namespace TextParser
         {
             CreateFrequencyDictionary();
             CountWordFrequency();
+            sortDictionary();
             return _wordFrequency;
         }
 
@@ -27,16 +28,12 @@ namespace TextParser
             {
                 _wordFrequency[word]++;
             }
-#if DEBUG
-            sortDictionary();
-#endif
-
             List<string> keys = new List<string>(_wordFrequency.Keys);
             int allWordsCount = Words.Count;
-            foreach (string key in keys)
+            /*foreach (string key in keys)
             {
                 _wordFrequency[key] /= allWordsCount;
-            }
+            }*/
         }
         //TODO: Method ONLY for testing purposes
         private void sortDictionary()   //method for testing purposes
@@ -44,6 +41,8 @@ namespace TextParser
             List<KeyValuePair<string, double>> myList = _wordFrequency.ToList();
 
             myList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+
+            _wordFrequency = myList.ToDictionary(x => x.Key, x=> x.Value);
 
         }
 

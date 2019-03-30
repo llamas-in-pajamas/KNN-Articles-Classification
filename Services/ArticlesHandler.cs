@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,12 +14,31 @@ namespace Services
     public class ArticlesHandler
     {
         
-        public List<ArticleDataModel> ArticlesDataModels = new List<ArticleDataModel>();
+        //public List<ArticleDataModel> ArticlesDataModels = new List<ArticleDataModel>();
 
         private StopListService _stopListService;
-        private StemmingService _stemmingService = new StemmingService();
         private TermFrequencyParserService _termService;
         private IdfService _idfService = new IdfService();
+
+        public static List<string> GetStemmedAndStoplistedWords(ArticleModel article, List<string> stoplist)
+        {
+            StopListService stopservice = new StopListService(GetWordsFromArticle(article));
+            return StemmingService.Call(stopservice.Call(stoplist));
+
+        }
+        public List<string> GetStopListedWords(List<string> stoplist, List<string> words)
+        {
+            _stopListService = new StopListService(words);
+            return _stopListService.Call(stoplist);
+        }
+
+        
+        public static List<string> GetWordsFromArticle(ArticleModel article)
+        {
+            return article.Article.Body.RemoveDigits().RemovePunctuation()
+                .RemoveSymbols()
+                .ToListWithoutEmptyEntries();
+        }
 
         public Dictionary<string, double> GetTermFrequencies(List<string> wordList)
         {
@@ -28,7 +48,7 @@ namespace Services
         }
 
 
-        public void ProcessWords(ref List<string> articles, List<string> stopList)
+        /*public void ProcessWords(ref List<string> articles, List<string> stopList)
         {
 
             _stopListService = new StopListService(articles);
@@ -40,7 +60,7 @@ namespace Services
             articles = stemmedWords;
 
 
-        }
+        }*/
 
         
     }

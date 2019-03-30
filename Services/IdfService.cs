@@ -9,7 +9,7 @@ namespace Services
         private Dictionary<string, int> _idfDictionary = new Dictionary<string, int>();
         private Dictionary<string, double> _idfTfFactorsDictionary = new Dictionary<string, double>();
 
-        public void Call(ref List<ArticleDataModel> articles)
+        /*public void Call(ref List<ArticleDataModel> articles)
         {
             AddArticlesToIdf(articles);
             GenerateIdfTfFactors(articles);
@@ -41,7 +41,7 @@ namespace Services
             {
                 _idfTfFactorsDictionary.Add(i.Key, Math.Log10(numOfArticles / i.Value));
             }
-        }
+        }*/
 
         /*private void InsertIdfFactorsIntoArticles(ref List<ArticleDataModel> articles)
         {

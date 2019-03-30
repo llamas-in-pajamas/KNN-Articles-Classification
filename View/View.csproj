@@ -92,7 +92,8 @@
     </ApplicationDefinition>
     <Compile Include="Converters\EnumMatchToBooleanConverter.cs" />
     <Compile Include="Helper\ArticleMetadataExtractor.cs" />
-    <Compile Include="ViewModel\SelectableViewModel.cs" />
+    <Compile Include="ViewModel\KeyWordsVM.cs" />
+    <Compile Include="ViewModel\SelectableVM.cs" />
     <Compile Include="ProgressDialog\Core\WindowSettings.cs" />
     <Compile Include="ProgressDialog\ProgressDialog\ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>
@@ -152,6 +153,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClassificationServices\ClassificationServices.csproj">
+      <Project>{6bbc425f-6295-4fe6-a834-0c2f75212f5c}</Project>
+      <Name>ClassificationServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExtensionMethods\ExtensionMethods.csproj">
       <Project>{886faba1-3335-47f9-9297-f2c14929febd}</Project>
       <Name>ExtensionMethods</Name>

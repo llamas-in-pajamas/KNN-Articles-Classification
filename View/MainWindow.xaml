@@ -25,92 +25,102 @@
 
     <Border Padding="10">
 
-        
-
-                <Grid Height="auto">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="5*" />
-                            <ColumnDefinition Width="7*" />
-                        </Grid.ColumnDefinitions>
 
 
-                        <materialDesign:ColorZone
+        <Grid Height="auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="7*" />
+            </Grid.ColumnDefinitions>
+
+
+            <materialDesign:ColorZone
                                 Padding="9"
                                 CornerRadius="5"
                                 VerticalAlignment="Stretch"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                 Margin="5 10">
 
-                            <StackPanel Height="auto" Grid.Column="0">
-                                <Button Grid.Column="1" Margin="5" Content="Select catalog to load articles" Command="{Binding SelectCatalogButton}" />
+                <Grid Height="auto">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4.3*" />
+                        <RowDefinition Height="11.5*" />
+                        <RowDefinition Height="5*" />
 
-                                <ProgressBar
+                    </Grid.RowDefinitions>
+
+                    <StackPanel>
+                        <Button  Margin="5" Content="Select catalog to load articles" Command="{Binding SelectCatalogButton}" />
+
+                        <ProgressBar
                             IsIndeterminate="True" Visibility="{Binding Path=IsArticleLoadingVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                <TextBlock FontWeight="Bold" Text="{Binding SelectArticleText}" Visibility="{Binding Path=NumOfArticlesVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                <Button  Margin="5" Content="Select stop list" Command="{Binding SelectStopListButton}" IsEnabled="{Binding IsEnabledStopListBTN}" />
-                                <TextBlock FontWeight="Bold" Text="{Binding SelectStopListText}" Visibility="{Binding Path=NumOfStopListVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                <TextBlock Text="Select metadata to process:" TextAlignment="Center" Margin="0 5" />
-                                <ComboBox 
+                        <TextBlock FontWeight="Bold" Text="{Binding SelectArticleText}" Visibility="{Binding Path=NumOfArticlesVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <Button  Margin="5" Content="Select stop list" Command="{Binding SelectStopListButton}" IsEnabled="{Binding IsEnabledStopListBTN}" />
+                        <TextBlock FontWeight="Bold" Text="{Binding SelectStopListText}" Visibility="{Binding Path=NumOfStopListVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="1">
+                        <TextBlock Text="Select metadata to process:" TextAlignment="Center" Margin="0 5" />
+                        <ComboBox 
                                   materialDesign:HintAssist.Hint="Category"
                                   ItemsSource="{Binding Path=CategoryCombobox}" 
                                   SelectedValue="{Binding Path=CategoryComboboxSelected}">
-                                    <ComboBox.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel />
-                                        </ItemsPanelTemplate>
-                                    </ComboBox.ItemsPanel>
-                                </ComboBox>
-                                <ScrollViewer Margin="0 10" Height="200" VerticalScrollBarVisibility="Auto">
-                                    <ItemsControl
+                            <ComboBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel />
+                                </ItemsPanelTemplate>
+                            </ComboBox.ItemsPanel>
+                        </ComboBox>
+                        <ScrollViewer Margin="0 10" Height="200" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl
                             ItemsSource="{Binding CategoryItems}"
                             Grid.IsSharedSizeScope="True"
                             Margin="0 0 12 0">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate
-                                    DataType="{x:Type local:SelectableViewModel}">
-                                                <Border
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate
+                                    DataType="{x:Type local:SelectableVM}">
+                                        <Border
                                         x:Name="Border"
                                         Padding="5">
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition
                                                     SharedSizeGroup="Checkerz" />
-                                                            <ColumnDefinition />
-                                                        </Grid.ColumnDefinitions>
-                                                        <CheckBox
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <CheckBox
                                                 VerticalAlignment="Center"
                                                 IsChecked="{Binding IsSelected}" />
-                                                        <StackPanel
+                                                <StackPanel
                                                 Margin="8 0 0 0"
                                                 Grid.Column="1">
-                                                            <TextBlock
+                                                    <TextBlock
                                                     FontWeight="Bold"
                                                     Text="{Binding Name}" />
-                                                            <TextBlock
+                                                    <TextBlock
                                                     Text="{Binding Count}" />
-                                                        </StackPanel>
-                                                    </Grid>
-                                                </Border>
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger
                                             Binding="{Binding IsSelected}"
                                             Value="True">
-                                                        <Setter
+                                                <Setter
                                                 TargetName="Border"
                                                 Property="Background"
                                                 Value="{DynamicResource MaterialDesignSelection}" />
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </ScrollViewer>
-                                <Button Content="Select default values" Command="{Binding SelectDefaultButton}" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <Button Content="Select default values" Command="{Binding SelectDefaultButton}" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="2">
+                        <TextBlock TextWrapping="Wrap" Text="Please select amount of learning data (%):" Margin="5 10" />
 
-
-                                <TextBlock TextWrapping="Wrap" Text="Please select amount of learning data (%):" Margin="5 10" />
-
-                                <Slider
+                        <Slider
                             Minimum="0"
                             Maximum="100"
                             Style="{StaticResource MaterialDesignDiscreteSlider}"
@@ -118,8 +128,8 @@
                             Value="{Binding AmountLearningDataSlider}"
                             Width="250" />
 
-                                <StackPanel Margin="0 10 0 0"  Orientation="Horizontal" HorizontalAlignment="Center" >
-                                    <TextBox
+                        <StackPanel Margin="0 10 0 0"  Orientation="Horizontal" HorizontalAlignment="Center" >
+                            <TextBox
                                         materialDesign:HintAssist.Hint="Num of Key-words"
                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                         Text="{Binding NumberOfKeyWordsTB}"
@@ -139,12 +149,89 @@
                                 Visibility="{Binding Path=PreprocessDataProgressVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
                                 Value="0"
                                 IsIndeterminate="True" />
-                                </StackPanel>
-                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
 
-                        </materialDesign:ColorZone>
-                    </Grid>
-        
+
+            </materialDesign:ColorZone>
+
+
+
+            <materialDesign:ColorZone
+                    Padding="9"
+                    CornerRadius="5"
+                    VerticalAlignment="Stretch"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                    Margin="5 10" Grid.Column="1">
+
+                <Grid Height="auto">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="7*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                        <TextBox
+                                materialDesign:HintAssist.Hint="Number of learning articles"
+                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                Text="{Binding NumberOfLearningArticlesTB}"
+                                IsReadOnly="True"   
+                                Margin="10 0 20 0"
+                            />
+                        <TextBox
+                                materialDesign:HintAssist.Hint="Num of training articles"
+                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                Text="{Binding NumberOfTrainingArticlesTB}"
+                                IsReadOnly="True"            
+                            />
+
+                    </StackPanel>
+
+
+                    <materialDesign:Card
+                        Background="{DynamicResource MaterialDesignBackground}"
+                        Grid.Row="1"
+                        Margin="0 10 0 0">
+                        <StackPanel>
+                            <Expander
+                                  HorizontalAlignment="Stretch"
+                                  Header="Generated Key-Words"
+                                IsExpanded="{Binding KeyWordsIsExpanded, Mode=TwoWay}" 
+                                IsEnabled="{Binding KeyWordsIsEnabled}" >
+                                <ScrollViewer Margin="0 10"  Height="200"  VerticalScrollBarVisibility="Auto">
+                                    <StackPanel
+                                    Orientation="Vertical"
+                                    TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                    Margin="24,8,24,16">
+                                        <DataGrid
+                                        Margin="0 8 0 0"
+                                        ItemsSource="{Binding KeyWordsItems}"
+                                        materialDesign:DataGridAssist.CellPadding="4 2 2 2"
+                                        materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2" 
+                                        IsReadOnly="True"/>
+                                    </StackPanel>
+                                </ScrollViewer>
+
+                            </Expander>
+
+                            <Border
+                              Background="{DynamicResource MaterialDesignDivider}"
+                              Height="1"
+                              HorizontalAlignment="Stretch"
+                              SnapsToDevicePixels="True" />
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                </Grid>
+            </materialDesign:ColorZone>
+        </Grid>
+
 
     </Border>
 </Window>

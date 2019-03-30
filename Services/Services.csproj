@@ -41,8 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArticleAnalyticsModel.cs" />
     <Compile Include="ArticlesHandler.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="IdfService.cs" />
     <Compile Include="KeyWordsExtractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
