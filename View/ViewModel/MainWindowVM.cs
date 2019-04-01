@@ -311,6 +311,8 @@ namespace View.ViewModel
 
         #endregion
 
+        #region File-handling methods
+
         private void LoadStopList()
         {
             _stopList = new List<string>();
@@ -383,6 +385,8 @@ namespace View.ViewModel
             IsArticleLoadingVisible = false;
 
         }
+        #endregion
+        #region Window content loading methods
 
         private void LoadCategories(List<ArticleModel> articles)
         {
@@ -440,7 +444,7 @@ namespace View.ViewModel
                 ShowErrorMaterial("Places must be selected to load default values");
             }
         }
-
+        #endregion
         #region MessageBox Section
 
         private void ShowMsgMaterial(string text)
