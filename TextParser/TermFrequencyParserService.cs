@@ -43,6 +43,7 @@ namespace TextParser
 
             myList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
 
+
             _wordFrequency = myList.ToDictionary(x => x.Key, x=> x.Value);
 
         }

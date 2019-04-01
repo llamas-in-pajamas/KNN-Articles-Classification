@@ -36,8 +36,6 @@ namespace View.ViewModel
 
         private Brush _foreground;
         private Brush _background;
-
-
         #endregion
 
         private List<ArticleModel> _articles;
@@ -56,6 +54,7 @@ namespace View.ViewModel
         public ICommand SelectStopListButton { get; }
         public ICommand SelectDefaultButton { get; }
         public ICommand PreProcessButton { get; }
+
         #region props
 
         public bool IsEnabledStopListBTN { get; set; }
@@ -196,6 +195,7 @@ namespace View.ViewModel
                     NumberOfLearningArticlesTB = _learningArticles.Count;
                     NumberOfTrainingArticlesTB = _trainingArticles.Count;
                     timer.Start();
+                    //TODO: Add method choosing in View
                     //_keyWords = KeyWordsExtractor.GetKeyWordsTF(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList);
                     _keyWords = KeyWordsExtractor.GetKeyWordsTFExtended(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList);
                     timer.Stop();
@@ -219,7 +219,7 @@ namespace View.ViewModel
                 LoadKeyWordsToGui();
                 
                 KeyWordsIsEnabled = true;
-                ShowMsgMaterial($"Pre-processing complete! Elapsed time: {time} ms");
+                ShowMsgMaterial($"Pre-processing complete! Elapsed time: {time} mst");
                 CurrentExpanded = ExpandedValues.KeyWords;
             }
             
@@ -240,7 +240,6 @@ namespace View.ViewModel
                     Word = VARIABLE
                 });
                 }
-                
             }
         }
 
@@ -290,36 +289,7 @@ namespace View.ViewModel
                 {
                     ShowErrorMaterial(e.Message);
                 }
-
             }
-
-            /*List<string> labels = new List<string>(_places.Keys);
-            foreach (ArticleModel article in _articles)
-            {
-                if (article.Categories["places"].Count != 0 && labels.Contains(article.Categories["places"]?.First()) && article.Article.Body != null)
-                {
-                    _places[article.Categories["places"]?.First()].AddRange(
-                        article.Article.Body
-                        .RemoveDigits()
-                        .RemovePunctuation()
-                        .RemoveSymbols()
-                        .ToListWithoutEmptyEntries()
-                   );
-                }
-            }*/
-
-
-
-            /*_articlesHandler = new ArticlesHandler();
-            foreach (var key in labels)
-            {
-                var temp = _places[key];
-                _articlesHandler.ProcessWords(ref temp, words);
-                _places[key] = temp;
-                _placesTermFrequency[key] = _articlesHandler.GetTermFrequencies(temp);
-
-            }*/
-
         }
 
 
@@ -429,8 +399,6 @@ namespace View.ViewModel
         }
 
         #region MessageBox Section
-
-        
 
         private void ShowMsgMaterial(string text)
         {
