@@ -5,10 +5,6 @@ namespace ClassificationServices
 {
     class NiewiadomskiNGrammFeatureService : IFeatureService
     {
-        private int _keywordCount;
-        private int _stemmedWordsCount;
-        private int _maximum;
-
         public double Call(List<string> keyWords, List<string> stemmedWords)
         {
             double result = 0.0;
@@ -25,9 +21,10 @@ namespace ClassificationServices
 
         private double NiewiadomskiSimilarityFunction(string firstWord, string secondWord)
         {
-            double fractional = 2.0 / (Math.Pow(_maximum, 2) + _maximum);
             int firstWordLetterCount = firstWord.Length;
             int secondWordLetterCount = secondWord.Length;
+            double maximum = firstWordLetterCount >= secondWordLetterCount ? firstWordLetterCount : secondWordLetterCount;
+            double fractional = 2.0 / (Math.Pow(maximum, 2) + maximum);
             double result = 0.0;
             for(int i = 1; i <= firstWordLetterCount; i++)
             {
