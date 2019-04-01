@@ -9,6 +9,7 @@ using SGMParser;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -184,6 +185,8 @@ namespace View.ViewModel
             CurrentExpanded = ExpandedValues.None;
             KeyWordsIsEnabled = false;
             bool success = false;
+            double time =0;
+            Stopwatch timer = new Stopwatch();
             await Task.Run(() =>
             {
                 try
@@ -192,12 +195,16 @@ namespace View.ViewModel
                     SplitArticles(AmountLearningDataSlider);
                     NumberOfLearningArticlesTB = _learningArticles.Count;
                     NumberOfTrainingArticlesTB = _trainingArticles.Count;
+                    timer.Start();
                     //_keyWords = KeyWordsExtractor.GetKeyWordsTF(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList);
                     _keyWords = KeyWordsExtractor.GetKeyWordsTFExtended(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList);
+                    timer.Stop();
+                    time = timer.ElapsedMilliseconds;
                     success = true;
                 }
                 catch (Exception e)
                 {
+                    timer.Stop();
                     _errorMessage = e.Message;
                 }
             }
@@ -212,7 +219,7 @@ namespace View.ViewModel
                 LoadKeyWordsToGui();
                 
                 KeyWordsIsEnabled = true;
-                ShowMsgMaterial("Pre-processing complete!");
+                ShowMsgMaterial($"Pre-processing complete! Elapsed time: {time} ms");
                 CurrentExpanded = ExpandedValues.KeyWords;
             }
             
