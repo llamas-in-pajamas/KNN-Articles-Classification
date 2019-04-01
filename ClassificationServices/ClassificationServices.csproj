@@ -42,8 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryFeatureService.cs" />
+    <Compile Include="CityMetric.cs" />
     <Compile Include="ClassificationModel.cs" />
     <Compile Include="ClassificationHelpers.cs" />
+    <Compile Include="EuclideanDistance.cs" />
+    <Compile Include="IDistance.cs" />
     <Compile Include="IFeatureService.cs" />
     <Compile Include="Keyword20PercentFrequencyService.cs" />
     <Compile Include="KeywordCountFeatureService.cs" />
