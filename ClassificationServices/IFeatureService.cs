@@ -2,7 +2,7 @@
 
 namespace ClassificationServices
 {
-    public interface IFeatureMethod
+    public interface IFeatureService
     {
         double Call(List<string> keyWords, List<string> stemmedWords);
     }

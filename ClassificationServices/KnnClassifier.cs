@@ -10,12 +10,12 @@ namespace ClassificationServices
     {
         private List<ClassificationModel> ClassifiedArticles { get; set; }
         private Dictionary<string, List<string>> _keyWords;
-        private List<Func<List<string>, List<string>, double>> _featuresMethods;
+        private List<IFeatureService> _featureServices;
 
-        public KnnClassifier(Dictionary<string, List<string>> KeyWords, List<Func<List<string>, List<string>, double>> featuresMethods)
+        public KnnClassifier(Dictionary<string, List<string>> KeyWords, List<IFeatureService> featureServices)
         {
             _keyWords = KeyWords;
-            _featuresMethods = featuresMethods;
+            _featureServices = featureServices;
         }
 
         public void EnterColdStartArticles(List<ClassificationModel> data)
@@ -37,11 +37,11 @@ namespace ClassificationServices
         private List<double> CalculateWeightsForArticle(ClassificationModel data)
         {
             var temp = new List<double>();
-            foreach (var featuresMethod in _featuresMethods)
+            foreach (IFeatureService service in _featureServices)
             {
                 foreach (var tag in _keyWords)
                 {
-                    temp.Add(featuresMethod(tag.Value, data.StemmedWords));
+                    temp.Add(service.Call(tag.Value, data.StemmedWords));
                 }
             }
 
