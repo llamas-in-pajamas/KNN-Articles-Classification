@@ -12,25 +12,18 @@ namespace ClassificationServices
         public double Call(List<string> keyWords, List<string> stemmedWords)
         {
             double result = 0.0;
-            _keywordCount = keyWords.Count;
-            _stemmedWordsCount = stemmedWords.Count;
-            _maximum = _keywordCount >= _stemmedWordsCount ? _keywordCount : _stemmedWordsCount;
-            double fractional = 1.0 / _maximum;
-            for(int i = 0; i < _keywordCount; i++)
+            foreach(string keyword in keyWords)
             {
-                List<double> temporary = new List<double>();
-                for(int j = 0; j < _keywordCount; j++)
+                foreach(string word in stemmedWords)
                 {
-                    temporary.Add(SimilarityFunction(keyWords[j], stemmedWords[i]));
+                    result += NiewiadomskiSimilarityFunction(keyword, word);
                 }
-                temporary.Sort();
-                temporary.Reverse();
-                result += temporary[0];
             }
-            return result * fractional;
+
+            return result / stemmedWords.Count;
         }
 
-        private double SimilarityFunction(string firstWord, string secondWord)
+        private double NiewiadomskiSimilarityFunction(string firstWord, string secondWord)
         {
             double fractional = 2.0 / (Math.Pow(_maximum, 2) + _maximum);
             int firstWordLetterCount = firstWord.Length;
