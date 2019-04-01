@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClassificationServices
 {
-    class SentenceSimilarityFeatureService : IFeatureService
+    class NiewiadomskiNGrammFeatureService : IFeatureService
     {
         private int _keywordCount;
         private int _stemmedWordsCount;

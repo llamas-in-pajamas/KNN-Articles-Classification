@@ -49,7 +49,8 @@
     <Compile Include="KeywordCountFeatureService.cs" />
     <Compile Include="KeywordFrequencyFeatureService.cs" />
     <Compile Include="KnnClassifier.cs" />
-    <Compile Include="SentenceSimilarityFeatureService.cs" />
+    <Compile Include="NGrammFeatureService.cs" />
+    <Compile Include="NiewiadomskiNGrammFeatureService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextSimilarityMethods.cs" />
   </ItemGroup>
