@@ -7,5 +7,6 @@ namespace ClassificationServices
         public string Tag { get; set; }
         public string PredictedTag { get; set; }
         public List<string> StemmedWords { get; set; }
+        public List<double> CalculatedWeights { get; set; }
     }
 }
