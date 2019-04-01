@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryFeatureService.cs" />
     <Compile Include="ClassificationModel.cs" />
     <Compile Include="ClassificationHelpers.cs" />
     <Compile Include="IFeatureService.cs" />
