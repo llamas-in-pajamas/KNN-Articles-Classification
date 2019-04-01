@@ -12,8 +12,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -44,6 +42,7 @@ namespace View.ViewModel
         private List<ClassificationModel> _trainingArticles;
         private List<string> _stopList;
         private string _categoryComboboxSelected;
+        private string _keyWordsMethodSelected;
         private Dictionary<string, List<string>> _keyWords;
 
         private string _errorMessage;
@@ -63,7 +62,7 @@ namespace View.ViewModel
         public bool IsArticleLoadingVisible { get; set; }
         public bool NumOfArticlesVisibility { get; set; }
         public bool NumOfStopListVisibility { get; set; }
-        public ObservableCollection<string> CategoryCombobox { get; set; }
+
 
         public int NumberOfLearningArticlesTB { get; set; }
         public int NumberOfTrainingArticlesTB { get; set; }
@@ -76,19 +75,19 @@ namespace View.ViewModel
                 if (_currentExpanded == value)
                 {
                     _currentExpanded = ExpandedValues.None;
-                    
+
                 }
                 else
                 {
                     _currentExpanded = value;
                 }
                 OnPropertyChanged(nameof(CurrentExpanded));
-                
+
             }
         }
 
         public bool KeyWordsIsEnabled { get; set; }
-
+        public ObservableCollection<string> CategoryCombobox { get; set; }
         public string CategoryComboboxSelected
         {
             get => _categoryComboboxSelected;
@@ -106,6 +105,27 @@ namespace View.ViewModel
         public bool IsEnabledPreProcessBTN { get; set; }
         public bool PreprocessDataProgressVisibility { get; set; }
         public int NumberOfKeyWordsTB { get; set; } = 8;
+        public ObservableCollection<string> KeyWordsMethodCombobox { get; set; } = new ObservableCollection<string>()
+        {
+            "1. Term Frequency",
+            "2. Extended Term Frequency"
+        };
+        public string KeyWordsMethodSelected
+        {
+            get => _keyWordsMethodSelected;
+            set
+            {
+                _keyWordsMethodSelected = value;
+                KeyWordsFilterWordsVisibility = value.Substring(0, 1) == "2";
+                OnPropertyChanged(nameof(KeyWordsMethodSelected));
+                
+
+            }
+        }
+
+        public bool KeyWordsFilterWordsVisibility { get; set; }
+        public int KeyWordsFilterWordsTB { get; set; } = 100;
+
         #endregion
 
 
@@ -180,11 +200,16 @@ namespace View.ViewModel
         //TODO: Finish pre-processing articles
         private async void PreProcessData()
         {
+            if (string.IsNullOrEmpty(KeyWordsMethodSelected))
+            {
+                ShowErrorMaterial("You need to select key-words extraction method");
+                return;
+            }
             PreprocessDataProgressVisibility = true;
             CurrentExpanded = ExpandedValues.None;
             KeyWordsIsEnabled = false;
             bool success = false;
-            double time =0;
+            double time = 0;
             Stopwatch timer = new Stopwatch();
             await Task.Run(() =>
             {
@@ -195,9 +220,9 @@ namespace View.ViewModel
                     NumberOfLearningArticlesTB = _learningArticles.Count;
                     NumberOfTrainingArticlesTB = _trainingArticles.Count;
                     timer.Start();
-                    //TODO: Add method choosing in View
-                    //_keyWords = KeyWordsExtractor.GetKeyWordsTF(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList);
-                    _keyWords = KeyWordsExtractor.GetKeyWordsTFExtended(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList);
+
+                    ExtractKeyWords();
+
                     timer.Stop();
                     time = timer.ElapsedMilliseconds;
                     success = true;
@@ -212,19 +237,37 @@ namespace View.ViewModel
             if (!success)
             {
                 ShowErrors();
-                
+
             }
             else
             {
                 LoadKeyWordsToGui();
-                
+
                 KeyWordsIsEnabled = true;
-                ShowMsgMaterial($"Pre-processing complete! Elapsed time: {time} mst");
+                ShowMsgMaterial($"Pre-processing complete! Elapsed time: {time} ms");
                 CurrentExpanded = ExpandedValues.KeyWords;
             }
-            
+
             PreprocessDataProgressVisibility = false;
 
+        }
+
+        private void ExtractKeyWords()
+        {
+            var temp = KeyWordsMethodSelected.Substring(0, 1);
+
+            switch (temp)
+            {
+                case "1":
+                    _keyWords = KeyWordsExtractor.GetKeyWordsTF(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList);
+                    break;
+                case "2":
+                    _keyWords = KeyWordsExtractor.GetKeyWordsTFExtended(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList, KeyWordsFilterWordsTB);
+                    break;
+                default:
+                    throw new ArgumentException("You need to select key-words extraction method");
+
+            }
         }
 
         private void LoadKeyWordsToGui()
@@ -235,10 +278,10 @@ namespace View.ViewModel
                 foreach (var VARIABLE in keyWord.Value)
                 {
                     KeyWordsItems.Add(new KeyWordsVM()
-                {
-                    Tag = keyWord.Key,
-                    Word = VARIABLE
-                });
+                    {
+                        Tag = keyWord.Key,
+                        Word = VARIABLE
+                    });
                 }
             }
         }
@@ -263,7 +306,7 @@ namespace View.ViewModel
             int allArticles = _filteredOutArticles.Count;
             int learningArticles = allArticles * percentage / 100;
             _learningArticles = _filteredOutArticles.Take(learningArticles).ToList();
-            _trainingArticles = ClassificationHelpers.ConvertToClassificationModels(_filteredOutArticles.Skip(learningArticles).ToList(),CategoryComboboxSelected,_stopList);
+            _trainingArticles = ClassificationHelpers.ConvertToClassificationModels(_filteredOutArticles.Skip(learningArticles).ToList(), CategoryComboboxSelected, _stopList);
         }
 
         #endregion

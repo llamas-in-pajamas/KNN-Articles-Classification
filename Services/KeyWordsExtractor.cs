@@ -11,7 +11,7 @@ namespace Services
 
         public static Dictionary<string, List<string>> GetKeyWordsTFExtended(List<ArticleModel> articles,
             int numOfKeywords,
-            string category, List<string> stopList)
+            string category, List<string> stopList, int numOfWordsToSkip)
         {
             var TfWords = GetKeyWordsHelper(articles, category, stopList);
             var keys = TfWords.Keys.ToList();
@@ -25,7 +25,7 @@ namespace Services
                         continue;
                     }
                     //TODO: Decide on this top words parameter
-                    otherWords.AddRange(tfWord.Value.Take(100));
+                    otherWords.AddRange(tfWord.Value.Take(numOfWordsToSkip));
 
                 }
 

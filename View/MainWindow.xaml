@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="650" Width="850"
+        Title="MainWindow" Height="700" Width="850"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:converters="clr-namespace:View.Converters"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
@@ -17,7 +17,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         WindowStartupLocation="CenterScreen"
-        MinHeight="650"
+        MinHeight="690"
         MinWidth="800"
        >
 
@@ -42,13 +42,14 @@
                                 CornerRadius="5"
                                 VerticalAlignment="Stretch"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth2"
-                                Margin="5 10">
+                                Margin="5,10">
 
                 <Grid Height="auto">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4.3*" />
                         <RowDefinition Height="11.5*" />
                         <RowDefinition Height="5*" />
+                        <RowDefinition Height="2*" />
 
                     </Grid.RowDefinitions>
 
@@ -136,23 +137,47 @@
                                         materialDesign:HintAssist.Hint="Num of Key-words"
                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                         Text="{Binding NumberOfKeyWordsTB}"
-                                        
                                         />
-                            <Button
-                                Margin="10 0 0 0"
-                                Width="140"
-                                Content="Pre-process Data" 
-                                ToolTip="During this process data will be filtered, stemmed, stop-listed and key words selected"
-                                
-                                Command="{Binding PreProcessButton}"
-                                IsEnabled="{Binding IsEnabledPreProcessBTN}"/>
-                            <ProgressBar
-                                Margin="20 0 0 0"
-                                Style="{StaticResource MaterialDesignCircularProgressBar}"
-                                Visibility="{Binding Path=PreprocessDataProgressVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                Value="0"
-                                IsIndeterminate="True" />
+                            <ComboBox 
+                                materialDesign:HintAssist.Hint="Key-words selection method"
+                                ItemsSource="{Binding Path=KeyWordsMethodCombobox}" 
+                                SelectedValue="{Binding Path=KeyWordsMethodSelected}"
+                                Margin="10 9 0 0">
+                                <ComboBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel />
+                                    </ItemsPanelTemplate>
+                                </ComboBox.ItemsPanel>
+                            </ComboBox>
+                            
+
                         </StackPanel>
+                        
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Margin="0 10 0 0"  Orientation="Horizontal" HorizontalAlignment="Center" >
+                        
+                        <TextBox
+                            materialDesign:HintAssist.Hint="N of Top Words filter"
+                            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                            Text="{Binding KeyWordsFilterWordsTB}"
+                            ToolTip="Select Number of most frequent words to create distinct categories"
+                            Visibility="{Binding Path=KeyWordsFilterWordsVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        />
+                        
+                        <Button
+                            Margin="10 0 0 0"
+                            Width="140"
+                            Content="Pre-process Data" 
+                            ToolTip="During this process data will be filtered, stemmed, stop-listed and key words selected"
+                                
+                            Command="{Binding PreProcessButton}"
+                            IsEnabled="{Binding IsEnabledPreProcessBTN}"/>
+                        <ProgressBar
+                            Margin="20 0 0 0"
+                            Style="{StaticResource MaterialDesignCircularProgressBar}"
+                            Visibility="{Binding Path=PreprocessDataProgressVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Value="0"
+                            IsIndeterminate="True" />
                     </StackPanel>
                 </Grid>
 
