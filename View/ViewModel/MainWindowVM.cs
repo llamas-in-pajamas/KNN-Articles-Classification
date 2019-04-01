@@ -192,7 +192,8 @@ namespace View.ViewModel
                     SplitArticles(AmountLearningDataSlider);
                     NumberOfLearningArticlesTB = _learningArticles.Count;
                     NumberOfTrainingArticlesTB = _trainingArticles.Count;
-                    _keyWords = KeyWordsExtractor.GetKeyWordsAllWordsTF(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList);
+                    //_keyWords = KeyWordsExtractor.GetKeyWordsTF(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList);
+                    _keyWords = KeyWordsExtractor.GetKeyWordsTFExtended(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList);
                     success = true;
                 }
                 catch (Exception e)

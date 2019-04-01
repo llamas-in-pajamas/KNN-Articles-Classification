@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using SGMParser;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using SGMParser;
 using TextParser;
 
 namespace Services
@@ -9,7 +8,50 @@ namespace Services
     public static class KeyWordsExtractor
     {
         static ArticlesHandler _articlesHandler = new ArticlesHandler();
-        public static Dictionary<string, List<string>> GetKeyWordsAllWordsTF(List<ArticleModel> articles, int numOfKeywords,
+
+        public static Dictionary<string, List<string>> GetKeyWordsTFExtended(List<ArticleModel> articles,
+            int numOfKeywords,
+            string category, List<string> stopList)
+        {
+            var TfWords = GetKeyWordsHelper(articles, category, stopList);
+            var keys = TfWords.Keys.ToList();
+            foreach (var key in keys)
+            {
+                List<string> otherWords = new List<string>();
+                foreach (var tfWord in TfWords)
+                {
+                    if (tfWord.Key == key)
+                    {
+                        continue;
+                    }
+                    //TODO: Decide on this top words parameter
+                    otherWords.AddRange(tfWord.Value.Take(100));
+
+                }
+
+                TfWords[key] = TfWords[key].Except(otherWords).Take(numOfKeywords).ToList();
+            }
+
+            return TfWords;
+        }
+
+        public static Dictionary<string, List<string>> GetKeyWordsTF(List<ArticleModel> articles,
+            int numOfKeywords,
+            string category, List<string> stopList)
+        {
+            var TfWords = GetKeyWordsHelper(articles, category, stopList);
+
+            var keys = TfWords.Keys.ToList();
+            foreach (var key in keys)
+            {
+                TfWords[key] = TfWords[key].Take(numOfKeywords).ToList();
+            }
+
+            return TfWords;
+        }
+
+
+        private static Dictionary<string, List<string>> GetKeyWordsHelper(List<ArticleModel> articles,
             string category, List<string> stopList)
         {
             Dictionary<string, List<string>> allWordsFromTag = new Dictionary<string, List<string>>();
@@ -30,10 +72,12 @@ namespace Services
             {
                 allWordsFromTag[key] = StemmingService.Call(_articlesHandler.GetStopListedWords(stopList, allWordsFromTag[key]));
                 Dictionary<string, double> wordsFrequency = _articlesHandler.GetTermFrequencies(allWordsFromTag[key]);
-                stopWords[key] = wordsFrequency.Keys.Take(numOfKeywords).ToList();
+                stopWords[key] = wordsFrequency.Keys.ToList();
             }
 
             return stopWords;
         }
     }
+
+
 }
