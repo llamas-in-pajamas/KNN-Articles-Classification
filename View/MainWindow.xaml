@@ -18,6 +18,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         WindowStartupLocation="CenterScreen"
         MinHeight="650"
+        MinWidth="800"
        >
 
     <Window.Resources>
@@ -201,25 +202,25 @@
                         Grid.Row="1"
                         Margin="0 10 0 0">
                         <StackPanel>
+                            
                             <Expander
-                                  HorizontalAlignment="Stretch"
-                                  Header="Generated Key-Words"
+                                HorizontalAlignment="Stretch"
+                                Header="Generated Key-Words"
                                 IsExpanded="{Binding CurrentExpanded, Converter={StaticResource ExpandedConverter}, ConverterParameter=1}" 
                                 IsEnabled="{Binding KeyWordsIsEnabled}" >
                                 <ScrollViewer Margin="0 10"  Height="200"  VerticalScrollBarVisibility="Auto">
                                     <StackPanel
-                                    Orientation="Vertical"
-                                    TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
-                                    Margin="24,8,24,16">
+                                        Orientation="Vertical"
+                                        TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                        Margin="24,8,24,16">
                                         <DataGrid
-                                        Margin="0 8 0 0"
-                                        ItemsSource="{Binding KeyWordsItems}"
-                                        materialDesign:DataGridAssist.CellPadding="4 2 2 2"
-                                        materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2" 
-                                        IsReadOnly="True"/>
+                                            Margin="0 8 0 0"
+                                            ItemsSource="{Binding KeyWordsItems}"
+                                            materialDesign:DataGridAssist.CellPadding="4 2 2 2"
+                                            materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2" 
+                                            IsReadOnly="True"/>
                                     </StackPanel>
                                 </ScrollViewer>
-
                             </Expander>
 
 
