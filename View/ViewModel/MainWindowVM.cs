@@ -140,7 +140,7 @@ namespace View.ViewModel
         #endregion
 
         public int KParamTB { get; set; } = 10;
-        public int ColdStartTB { get; set; } = 20;
+        public int ColdStartTB { get; set; } = 15;
 
         public ObservableCollection<string> MetricsCombobox { get; set; } = new ObservableCollection<string>()
         {
