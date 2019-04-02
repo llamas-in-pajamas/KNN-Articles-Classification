@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ClassificationServices
 {
@@ -7,7 +6,7 @@ namespace ClassificationServices
     {
         int _n;
 
-        public NGrammFeatureService(int n =3)
+        public NGrammFeatureService(int n = 3)
         {
             _n = n;
         }
@@ -23,17 +22,12 @@ namespace ClassificationServices
                 }
             }
 
-            //if ((stemmedWords.Count * keyWords.Count  ).Equals(0))
-            //{
-            //    throw new Exception("lkdsajfl");
-            //}
-            //var test= result / (stemmedWords.Count * keyWords.Count);
             return result;
         }
 
         private double SimilarityFunction(string firstWord, string secondWord)
         {
-            
+
             int firstWordCount = firstWord.Length;
             int secondWordCount = secondWord.Length;
             int maximum = firstWordCount >= secondWordCount ? firstWordCount : secondWordCount;
@@ -53,14 +47,14 @@ namespace ClassificationServices
 
             for (int i = 0; i < denominator - 1; i++)
             {
-                if (secondWord.Contains(firstWord.Substring(i)))
+                if (secondWord.Contains(firstWord.Substring(i, n)))
                 {
                     result++;
                 }
             }
 
-            var test= result * fractional;
+            var test = result * fractional;
             return test;
-         }
+        }
     }
 }

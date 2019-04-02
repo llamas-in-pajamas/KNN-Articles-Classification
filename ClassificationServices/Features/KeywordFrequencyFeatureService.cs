@@ -11,7 +11,7 @@ namespace ClassificationServices
             {
                 foreach (string word in stemmedWords)
                 {
-                    if (keyWord == word)
+                    if (keyWord.Contains(word))
                     {
                         keywordFrequency++;
                     }

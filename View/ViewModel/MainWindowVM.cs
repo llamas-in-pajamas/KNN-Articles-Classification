@@ -258,13 +258,13 @@ namespace View.ViewModel
         {
             KnnClassifier knn = new KnnClassifier(_keyWords, new List<IFeatureService>()
             {
-                /*new NGrammFeatureService(),
-                new NiewiadomskiNGrammFeatureService(),
+                new NGrammFeatureService(),
+                //new NiewiadomskiNGrammFeatureService(),
                 //new BinaryFeatureService(),
-                new KeywordFrequencyFeatureService(),
+                ///new KeywordFrequencyFeatureService(), :)
                 //new Keyword20PercentFrequencyService(),
-                new LevenshteinFeatureService(),*/
-                new PercentOfKeyWordsService()
+                //new LevenshteinFeatureService(),
+                ///new PercentOfKeyWordsService() :)
              }, new EuclideanDistance(), 10);
             List<string> temp = new List<string>();
             foreach (var VARIABLE in CategoryItems)
