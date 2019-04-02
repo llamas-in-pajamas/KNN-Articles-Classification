@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ClassificationServices
 {
@@ -21,21 +22,32 @@ namespace ClassificationServices
                     result += SimilarityFunction(keyword, word);
                 }
             }
-            return result / (stemmedWords.Count * keyWords.Count);
+
+            //if ((stemmedWords.Count * keyWords.Count  ).Equals(0))
+            //{
+            //    throw new Exception("lkdsajfl");
+            //}
+            //var test= result / (stemmedWords.Count * keyWords.Count);
+            return result;
         }
 
         private double SimilarityFunction(string firstWord, string secondWord)
         {
+            
             int firstWordCount = firstWord.Length;
             int secondWordCount = secondWord.Length;
             int maximum = firstWordCount >= secondWordCount ? firstWordCount : secondWordCount;
+            int n = _n;
+            if (maximum < _n)
+                n = maximum;
+
             if (firstWordCount < secondWordCount)
             {
                 string temp = firstWord;
                 firstWord = secondWord;
                 secondWord = temp;
             }
-            double denominator = maximum - _n + 1;
+            double denominator = maximum - n + 1;
             double fractional = 1.0 / denominator;
             double result = 0.0;
 
@@ -47,7 +59,8 @@ namespace ClassificationServices
                 }
             }
 
-            return result * fractional;
-        }
+            var test= result * fractional;
+            return test;
+         }
     }
 }

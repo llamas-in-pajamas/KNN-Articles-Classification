@@ -16,7 +16,7 @@ namespace ClassificationServices
                 }
             }
 
-            return result / (stemmedWords.Count * keyWords.Count);
+            return result;
         }
 
         private double NiewiadomskiSimilarityFunction(string firstWord, string secondWord)

@@ -20,7 +20,7 @@ namespace ClassificationServices
                 }
             }
 
-            return keywordFrequency / lastIndex;
+            return keywordFrequency;
         }
     }
 }

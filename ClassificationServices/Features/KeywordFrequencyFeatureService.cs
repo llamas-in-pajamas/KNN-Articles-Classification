@@ -17,7 +17,7 @@ namespace ClassificationServices
                     }
                 }
             }
-            return keywordFrequency / stemmedWords.Count;
+            return keywordFrequency;
         }
     }
 }

@@ -122,10 +122,19 @@ namespace ClassificationServices
             var temp = new List<double>();
             foreach (IFeatureService service in _featureServices)
             {
+                var temp1=new List<double>();
                 foreach (var tag in _keyWords)
                 {
-                    temp.Add(service.Call(tag.Value, data.StemmedWords));
+                    temp1.Add(service.Call(tag.Value, data.StemmedWords));
                 }
+
+                var max = temp1.Max();
+                for (int i = 0; i < temp1.Count; i++)
+                {
+                    temp1[i] /= max;
+                }
+                temp.AddRange(temp1);
+
             }
 
             return temp;

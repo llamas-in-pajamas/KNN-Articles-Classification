@@ -260,10 +260,11 @@ namespace View.ViewModel
             {
                 /*new NGrammFeatureService(),
                 new NiewiadomskiNGrammFeatureService(),
-                new BinaryFeatureService(),*/
+                //new BinaryFeatureService(),
                 new KeywordFrequencyFeatureService(),
-                /*new Keyword20PercentFrequencyService(),
-                new LevenshteinFeatureService()*/
+                //new Keyword20PercentFrequencyService(),
+                new LevenshteinFeatureService(),*/
+                new PercentOfKeyWordsService()
              }, new EuclideanDistance(), 10);
             List<string> temp = new List<string>();
             foreach (var VARIABLE in CategoryItems)
@@ -273,14 +274,14 @@ namespace View.ViewModel
                     temp.Add(VARIABLE.Name);
                 }
             }
-            knn.EnterColdStartArticles(ClassificationHelpers.GetNArticlesForColdStart(ref _trainingArticles, temp, 20));
+            knn.EnterColdStartArticles(ClassificationHelpers.GetNArticlesForColdStart(ref _trainingArticles, temp, 15));
             List<ClassificationModel> articles = new List<ClassificationModel>();
             foreach (var classificationModel in _trainingArticles)
             {
                 articles.Add(knn.ClassifyArticle(classificationModel));
             }
 
-            double lol = 0;
+            double lol = 0.0;
             foreach (var classificationModel in articles)
             {
                 if (classificationModel.PredictedTag == classificationModel.Tag)

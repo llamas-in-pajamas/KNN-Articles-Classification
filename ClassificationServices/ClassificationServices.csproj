@@ -45,6 +45,7 @@
     <Compile Include="Features\CityMetric.cs" />
     <Compile Include="ClassificationModel.cs" />
     <Compile Include="ClassificationHelpers.cs" />
+    <Compile Include="Features\PercentOfKeyWordsService.cs" />
     <Compile Include="Metrics\EuclideanDistance.cs" />
     <Compile Include="Metrics\IDistance.cs" />
     <Compile Include="Features\IFeatureService.cs" />
