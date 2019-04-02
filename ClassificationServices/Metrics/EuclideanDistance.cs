@@ -3,18 +3,17 @@ using System.Collections.Generic;
 
 namespace ClassificationServices
 {
-    class CityMetric : IDistance
+    public class EuclideanDistance : IDistance
     {
         public double Call(List<double> v1, List<double> v2)
         {
-            int n = v1.Count;
             double result = 0.0;
+            int n = v1.Count;
             for (int i = 0; i < n; i++)
             {
-                result += Math.Abs(v1[i] - v2[i]);
+                result += Math.Pow(v1[i] - v2[i], 2);
             }
-
-            return result;
+            return Math.Sqrt(result);
         }
     }
 }

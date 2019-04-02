@@ -2,7 +2,7 @@
 
 namespace ClassificationServices
 {
-    class NGrammFeatureService : IFeatureService
+    public class NGrammFeatureService : IFeatureService
     {
         int _n = 3;
 
@@ -14,9 +14,9 @@ namespace ClassificationServices
         public double Call(List<string> keyWords, List<string> stemmedWords)
         {
             double result = 0.0;
-            foreach(string keyword in keyWords)
+            foreach (string keyword in keyWords)
             {
-                foreach(string word in stemmedWords)
+                foreach (string word in stemmedWords)
                 {
                     result += SimilarityFunction(keyword, word);
                 }
@@ -35,7 +35,7 @@ namespace ClassificationServices
 
             for (int i = 1; i <= denominator; i++)
             {
-                if(secondWord.Contains(firstWord.Substring(i)))
+                if (secondWord.Contains(firstWord.Substring(i)))
                 {
                     result++;
                 }

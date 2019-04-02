@@ -41,21 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BinaryFeatureService.cs" />
-    <Compile Include="CityMetric.cs" />
+    <Compile Include="Features\BinaryFeatureService.cs" />
+    <Compile Include="Features\CityMetric.cs" />
     <Compile Include="ClassificationModel.cs" />
     <Compile Include="ClassificationHelpers.cs" />
-    <Compile Include="EuclideanDistance.cs" />
-    <Compile Include="IDistance.cs" />
-    <Compile Include="IFeatureService.cs" />
-    <Compile Include="Keyword20PercentFrequencyService.cs" />
-    <Compile Include="KeywordCountFeatureService.cs" />
-    <Compile Include="KeywordFrequencyFeatureService.cs" />
+    <Compile Include="Metrics\EuclideanDistance.cs" />
+    <Compile Include="Metrics\IDistance.cs" />
+    <Compile Include="Features\IFeatureService.cs" />
+    <Compile Include="Features\Keyword20PercentFrequencyService.cs" />
+    <Compile Include="Features\KeywordCountFeatureService.cs" />
+    <Compile Include="Features\KeywordFrequencyFeatureService.cs" />
     <Compile Include="KnnClassifier.cs" />
-    <Compile Include="NGrammFeatureService.cs" />
-    <Compile Include="NiewiadomskiNGrammFeatureService.cs" />
+    <Compile Include="Features\NGrammFeatureService.cs" />
+    <Compile Include="Features\NiewiadomskiNGrammFeatureService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextSimilarityMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExtensionMethods\ExtensionMethods.csproj">

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace ClassificationServices
 {
-    class Keyword20PercentFrequencyService : IFeatureService
+    public class Keyword20PercentFrequencyService : IFeatureService
     {
         public double Call(List<string> keyWords, List<string> stemmedWords)
         {
             int lastIndex = (int)Math.Floor(stemmedWords.Count * 0.2);
             double keywordFrequency = 0.0;
-            foreach(string keyWord in keyWords)
+            foreach (string keyWord in keyWords)
             {
                 for (int i = 0; i < lastIndex; i++)
                 {

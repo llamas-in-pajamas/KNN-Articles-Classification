@@ -2,22 +2,22 @@
 
 namespace ClassificationServices
 {
-    class KeywordFrequencyFeatureService : IFeatureService
+    public class KeywordCountFeatureService : IFeatureService
     {
         public double Call(List<string> keyWords, List<string> stemmedWords)
         {
-            double keywordFrequency = 0.0;
-            foreach(string keyWord in keyWords)
+            double keywordCount = 0;
+            foreach (string keyWord in keyWords)
             {
-                foreach(string word in stemmedWords)
+                foreach (string word in stemmedWords)
                 {
                     if (keyWord == word)
                     {
-                        keywordFrequency++;
+                        keywordCount++;
                     }
                 }
             }
-            return keywordFrequency / stemmedWords.Count;
+            return keywordCount;
         }
     }
 }

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace ClassificationServices
 {
-    class NiewiadomskiNGrammFeatureService : IFeatureService
+    public class NiewiadomskiNGrammFeatureService : IFeatureService
     {
         public double Call(List<string> keyWords, List<string> stemmedWords)
         {
             double result = 0.0;
-            foreach(string keyword in keyWords)
+            foreach (string keyword in keyWords)
             {
-                foreach(string word in stemmedWords)
+                foreach (string word in stemmedWords)
                 {
                     result += NiewiadomskiSimilarityFunction(keyword, word);
                 }
@@ -26,17 +26,17 @@ namespace ClassificationServices
             double maximum = firstWordLetterCount >= secondWordLetterCount ? firstWordLetterCount : secondWordLetterCount;
             double fractional = 2.0 / (Math.Pow(maximum, 2) + maximum);
             double result = 0.0;
-            for(int i = 1; i <= firstWordLetterCount; i++)
+            for (int i = 1; i <= firstWordLetterCount; i++)
             {
-                for(int j = 1; j <= firstWordLetterCount - i + 1; j++)
+                for (int j = 1; j <= firstWordLetterCount - i + 1; j++)
                 {
-                    if(secondWord.Contains(firstWord.Substring(j, i)))
+                    if (secondWord.Contains(firstWord.Substring(j, i)))
                     {
                         result++;
                     }
                 }
             }
-            return fractional * result; 
+            return fractional * result;
         }
     }
 }

@@ -2,13 +2,13 @@
 
 namespace ClassificationServices
 {
-    class BinaryFeatureService : IFeatureService
+    public class BinaryFeatureService : IFeatureService
     {
         public double Call(List<string> keyWords, List<string> stemmedWords)
         {
             int count = 0;
             int limit = keyWords.Count;
-            foreach(string keyword in keyWords)
+            foreach (string keyword in keyWords)
             {
                 if (stemmedWords.Contains(keyword)) count++;
             }
