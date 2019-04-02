@@ -48,11 +48,13 @@ namespace View.ViewModel
         private string _errorMessage;
         private string _currentExpanded;
 
+        
         #endregion
         public ICommand SelectCatalogButton { get; }
         public ICommand SelectStopListButton { get; }
         public ICommand SelectDefaultButton { get; }
         public ICommand PreProcessButton { get; }
+        public ICommand CategorizeButton { get; }
 
         #region props
 
@@ -104,7 +106,7 @@ namespace View.ViewModel
         public int AmountLearningDataSlider { get; set; } = 60;
         public bool IsEnabledPreProcessBTN { get; set; }
         public bool PreprocessDataProgressVisibility { get; set; }
-        public int NumberOfKeyWordsTB { get; set; } = 8;
+        public int NumberOfKeyWordsTB { get; set; } = 20;
         public ObservableCollection<string> KeyWordsMethodCombobox { get; set; } = new ObservableCollection<string>()
         {
             "1. Term Frequency",
@@ -118,13 +120,38 @@ namespace View.ViewModel
                 _keyWordsMethodSelected = value;
                 KeyWordsFilterWordsVisibility = value.Substring(0, 1) == "2";
                 OnPropertyChanged(nameof(KeyWordsMethodSelected));
-
-
             }
         }
 
         public bool KeyWordsFilterWordsVisibility { get; set; }
         public int KeyWordsFilterWordsTB { get; set; } = 100;
+
+        #region Switches
+
+        public bool BinaryToggleChecked { get; set; }
+        public bool TwentyFreqToggleChecked { get; set; }
+        public bool FreqToggleChecked { get; set; }
+        public bool LevenshteinToggleChecked { get; set; }
+        public bool NiewiadomskiNGrammToggleChecked { get; set; }
+        public bool PercentToggleChecked { get; set; } = true;
+        public bool NGrammToggleChecked { get; set; }
+        public int NGrammParamTB { get; set; } = 3;
+
+        #endregion
+
+        public int KParamTB { get; set; } = 10;
+        public int ColdStartTB { get; set; } = 20;
+
+        public ObservableCollection<string> MetricsCombobox { get; set; } = new ObservableCollection<string>()
+        {
+            "Euclidean Distance",
+            "City Metric"
+        };
+        public string MetricsSelected { get; set; }
+
+        public ObservableCollection<CategorizedItem> CategorizedItems { get; set; }
+
+        public double CategorizeButtonProgress { get; set; }
 
         #endregion
 
@@ -138,6 +165,7 @@ namespace View.ViewModel
             ReadWindowsSetting();
             ApplyBase(_isDarkTheme);
             ApplyColors(_isDarkTheme);
+            CategorizeButton = new RelayCommand(Categorize);
         }
 
         #region Theme Solvers
@@ -155,17 +183,17 @@ namespace View.ViewModel
                     _isDarkTheme = false;
                 }
 
-                //int registryValue = (int)registryValueObject;
-                int registryValue = 0;
-
-                if (registryValue > 0)
+                int registryValue;
+                if (registryValueObject == null)
                 {
-                    _isDarkTheme = false;
+                    registryValue = 0;
                 }
                 else
                 {
-                    _isDarkTheme = true;
+                    registryValue = (int)registryValueObject;
                 }
+
+                _isDarkTheme = registryValue <= 0;
             }
         }
 
@@ -195,7 +223,181 @@ namespace View.ViewModel
 
         #endregion
 
+        #region Categorization Methods
 
+        private async void Categorize()
+        {
+            
+            if (string.IsNullOrEmpty(MetricsSelected))
+            {
+                ShowErrorMaterial("Choose Metric before categorizing");
+                return;
+            }
+            var FeatureServices = GetFeatureServices();
+            if (FeatureServices.Count == 0)
+            {
+                ShowErrorMaterial("Choose at least 1 Feature before categorizing");
+                return;
+            }
+            var Metric = GetMetric();
+            GenerateListOfCategorized();
+            KnnClassifier knn = new KnnClassifier(_keyWords, FeatureServices, Metric, KParamTB);
+            knn.EnterColdStartArticles(ClassificationHelpers.GetNArticlesForColdStart(ref _trainingArticles, GetAllTags(), ColdStartTB));
+            CurrentExpanded = ExpandedValues.None;
+            CurrentExpanded = ExpandedValues.Categorized;
+            bool success = false;
+            double categorized = 0;
+            await Task.Run(() =>
+            {
+                try
+                {
+                    foreach (var classificationModel in _trainingArticles)
+                    {
+                        AddArticleToCategorized(knn.ClassifyArticle(classificationModel));
+                        categorized++;
+                        CategorizeButtonProgress = categorized / _trainingArticles.Count * 100;
+                    }
+                    success = true;
+                }
+                catch (Exception e)
+                {
+                    _errorMessage = e.Message;
+                }
+            });
+            if (!success)
+            {
+                ShowErrors();
+            }
+            else
+            {
+                ShowMsgMaterial($"Classification complete. Accuracy: {GetAccuracy()*100}%");
+            }
+
+            CategorizeButtonProgress = 0;
+
+        }
+
+        private List<IFeatureService> GetFeatureServices()
+        {
+            List<IFeatureService> temp = new List<IFeatureService>();
+            if (BinaryToggleChecked)
+            {
+                temp.Add(new BinaryFeatureService());
+            }
+
+            if (TwentyFreqToggleChecked)
+            {
+                temp.Add(new Keyword20PercentFrequencyService());
+            }
+
+            if (FreqToggleChecked)
+            {
+                temp.Add(new KeywordFrequencyFeatureService());
+            }
+
+            if (LevenshteinToggleChecked)
+            {
+                temp.Add(new LevenshteinFeatureService());
+            }
+
+            if (NiewiadomskiNGrammToggleChecked)
+            {
+                temp.Add(new NiewiadomskiNGrammFeatureService());
+            }
+
+            if (PercentToggleChecked)
+            {
+                temp.Add(new PercentOfKeyWordsService());
+            }
+
+            if (NGrammToggleChecked)
+            {
+                temp.Add(new NGrammFeatureService(NGrammParamTB));
+            }
+
+            return temp;
+        }
+
+        private IDistance GetMetric()
+        {
+            switch (MetricsSelected)
+            {
+                case "Euclidean Distance":
+                    return new EuclideanDistance();
+                case "City Metric":
+                    return new CityMetric();
+            }
+
+            return null;
+        }
+
+        private List<string> GetAllTags()
+        {
+            List<string> temp = new List<string>();
+            foreach (var item in CategoryItems)
+            {
+                if (item.IsSelected)
+                {
+                    temp.Add(item.Name);
+                }
+            }
+
+            return temp;
+        }
+
+        private void GenerateListOfCategorized()
+        {
+            CategorizedItems = new ObservableCollection<CategorizedItem>();
+            foreach (var allCategory in GetAllTags())
+            {
+                CategorizedItems.Add(new CategorizedItem()
+                {
+                    Tag = allCategory
+                });
+            }
+        }
+
+        private void AddArticleToCategorized(ClassificationModel article)
+        {
+            var predicted = article.PredictedTag;
+            foreach (var item in CategorizedItems)
+            {
+                if (item.Tag == article.Tag)
+                {
+                    item.All++;
+                    if (article.Tag == predicted)
+                    {
+                        item.TruePositive++;
+                    }
+                    else
+                    {
+                        item.FalseNegative++;
+                        foreach (var categorizedItem in CategorizedItems)
+                        {
+                            if (predicted == categorizedItem.Tag)
+                            {
+                                categorizedItem.FalsePositive++;
+                                break;
+                            }
+                        }
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        private double GetAccuracy()
+        {
+            double temp = 0;
+            foreach (var categorizedItem in CategorizedItems)
+            {
+                temp += categorizedItem.TruePositive;
+            }
+
+            return Math.Round(temp / _trainingArticles.Count, 3);
+        }
+        #endregion
         #region Pre-process Data Methods  
         //TODO: Finish pre-processing articles
         private async void PreProcessData()
@@ -249,49 +451,8 @@ namespace View.ViewModel
             }
 
             PreprocessDataProgressVisibility = false;
-
-            TestKnn();
-
         }
 
-        private void TestKnn()
-        {
-            KnnClassifier knn = new KnnClassifier(_keyWords, new List<IFeatureService>()
-            {
-                //new NGrammFeatureService(),
-                //new NiewiadomskiNGrammFeatureService(),
-                //new BinaryFeatureService(),
-                //new KeywordFrequencyFeatureService(), // <-
-                new Keyword20PercentFrequencyService(),
-                //new LevenshteinFeatureService()
-                ///new PercentOfKeyWordsService() // <-
-             }, new EuclideanDistance(), 10);
-            List<string> temp = new List<string>();
-            foreach (var VARIABLE in CategoryItems)
-            {
-                if (VARIABLE.IsSelected)
-                {
-                    temp.Add(VARIABLE.Name);
-                }
-            }
-            knn.EnterColdStartArticles(ClassificationHelpers.GetNArticlesForColdStart(ref _trainingArticles, temp, 15));
-            List<ClassificationModel> articles = new List<ClassificationModel>();
-            foreach (var classificationModel in _trainingArticles)
-            {
-                articles.Add(knn.ClassifyArticle(classificationModel));
-            }
-
-            double lol = 0.0;
-            foreach (var classificationModel in articles)
-            {
-                if (classificationModel.PredictedTag.Equals(classificationModel.Tag))
-                {
-                    lol++;
-                }
-            }
-
-            lol /= articles.Count;
-        }
 
         private void ExtractKeyWords()
         {

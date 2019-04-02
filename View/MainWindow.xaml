@@ -149,13 +149,13 @@
                                     </ItemsPanelTemplate>
                                 </ComboBox.ItemsPanel>
                             </ComboBox>
-                            
+
 
                         </StackPanel>
-                        
+
                     </StackPanel>
                     <StackPanel Grid.Row="3" Margin="0 10 0 0"  Orientation="Horizontal" HorizontalAlignment="Center" >
-                        
+
                         <TextBox
                             materialDesign:HintAssist.Hint="N of Top Words filter"
                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -163,7 +163,7 @@
                             ToolTip="Select Number of most frequent words to create distinct categories"
                             Visibility="{Binding Path=KeyWordsFilterWordsVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
                         />
-                        
+
                         <Button
                             Margin="10 0 0 0"
                             Width="140"
@@ -197,9 +197,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="7*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="4*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
@@ -221,43 +219,195 @@
 
                     </StackPanel>
 
-
-                    <materialDesign:Card
+                    <ContentControl Grid.Row="1">
+                        <materialDesign:Card
                         Background="{DynamicResource MaterialDesignBackground}"
-                        Grid.Row="1"
+                        
                         Margin="0 10 0 0">
-                        <StackPanel>
-                            
-                            <Expander
+                            <StackPanel Width="auto">
+
+                                <Expander
                                 HorizontalAlignment="Stretch"
                                 Header="Generated Key-Words"
                                 IsExpanded="{Binding CurrentExpanded, Converter={StaticResource ExpandedConverter}, ConverterParameter=1}" 
                                 IsEnabled="{Binding KeyWordsIsEnabled}" >
-                                <ScrollViewer Margin="0 10"  Height="200"  VerticalScrollBarVisibility="Auto">
-                                    <StackPanel
+                                    <ScrollViewer Margin="0 10"  Height="200"  VerticalScrollBarVisibility="Auto">
+                                        <StackPanel
                                         Orientation="Vertical"
                                         TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
                                         Margin="24,8,24,16">
-                                        <DataGrid
+                                            <DataGrid
                                             Margin="0 8 0 0"
                                             ItemsSource="{Binding KeyWordsItems}"
                                             materialDesign:DataGridAssist.CellPadding="4 2 2 2"
                                             materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2" 
                                             IsReadOnly="True"/>
-                                    </StackPanel>
-                                </ScrollViewer>
-                            </Expander>
-
-
-                            <Border
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </Expander>
+                                <Border
                               Background="{DynamicResource MaterialDesignDivider}"
                               Height="1"
                               HorizontalAlignment="Stretch"
                               SnapsToDevicePixels="True" />
+                                <Expander
+                                HorizontalAlignment="Stretch"
+                                Header="Categorized Articles Data"
+                                IsExpanded="{Binding CurrentExpanded, Converter={StaticResource ExpandedConverter}, ConverterParameter=2}" 
+                                >
+                                    <ScrollViewer Margin="0 10"  Height="200"  VerticalScrollBarVisibility="Auto">
+                                        <StackPanel
+                                        Orientation="Vertical"
+                                        TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                        Margin="24,8,24,16">
+                                            <DataGrid
+                                            Margin="0 8 0 0"
+                                            ItemsSource="{Binding CategorizedItems}"
+                                            materialDesign:DataGridAssist.CellPadding="4 2 2 2"
+                                            materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2" 
+                                            IsReadOnly="True"/>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </Expander>
+                            </StackPanel>
+                        </materialDesign:Card>
+                    </ContentControl>
 
-                            
-                        </StackPanel>
-                    </materialDesign:Card>
+                    <StackPanel Grid.Row="2">
+                        <TextBlock Text="KNN Settings" TextAlignment="Center" FontWeight="Bold" Margin="0 0 0 5" />
+                        <TextBlock Text="Features extraction selection:" TextAlignment="Center" FontWeight="DemiBold" Margin="0 0 0 5" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Grid.Column="0" Width="auto">
+                                <TextBlock Text="Binary Feature" TextAlignment="Center" ToolTip="If all key-words appeared in an article we can predict the tag" />
+                                <ToggleButton
+                                    Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                    IsChecked="{Binding BinaryToggleChecked}"
+                                    ToolTip="If all key-words appeared in an article we can predict the tag"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="1">
+                                <TextBlock Text="20% Frequency" ToolTip="Takes top 20% of text to make frequency feature" TextAlignment="Center" />
+                                <ToggleButton
+                                    Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                    ToolTip="Takes top 20% of text to make frequency feature"
+                                    IsChecked="{Binding TwentyFreqToggleChecked}" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="2">
+                                <TextBlock Text="Frequency" TextWrapping="Wrap" ToolTip="Uses Keyword frequency for an article" TextAlignment="Center" />
+                                <ToggleButton
+                                    Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                    ToolTip="Uses Keyword frequency for a article"
+                                    IsChecked="{Binding FreqToggleChecked}" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="3">
+                                <TextBlock Text="Levenshtein" TextWrapping="Wrap" ToolTip="Uses Levenshtein Metric for an article" TextAlignment="Center" />
+                                <ToggleButton
+                                    Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                    ToolTip="Uses Levenshtein Metric for an article"
+                                    IsChecked="{Binding LevenshteinToggleChecked}" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 10 0 0">
+                                <TextBlock Padding="10 0" Text="Niewiadomski N-Gramm" TextWrapping="Wrap" ToolTip="Uses Niewiadomski N-Gramm Metric for an article" TextAlignment="Center" />
+                                <ToggleButton
+                                    Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                    ToolTip="Uses Niewiadomski N-Gramm Metric for an article"
+                                    IsChecked="{Binding NiewiadomskiNGrammToggleChecked}" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="1" Margin="0 10 0 0">
+                                <TextBlock Padding="25 0" Text="Percent of key-words" TextWrapping="Wrap" ToolTip="Checks how many percent of all keywords appeared in an article" TextAlignment="Center" />
+                                <ToggleButton
+                                    Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                    ToolTip="Checks how many percent of all keywords appeared in an article"
+                                    IsChecked="{Binding PercentToggleChecked}" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="2" Margin="0 10 0 0">
+                                <TextBlock Padding="25 0" Text="Standard N-Gramm" TextWrapping="Wrap" ToolTip="Uses N-Gramm Metric for an article" TextAlignment="Center" />
+                                <ToggleButton
+                                    Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                    ToolTip="Uses N-Gramm Metric for an article"
+                                    IsChecked="{Binding NGrammToggleChecked}" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="3" Margin="0 10 0 0">
+                                <TextBox
+                                    materialDesign:HintAssist.Hint="N param for N-Gramm"
+                                    Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                    Text="{Binding NGrammParamTB}"
+                                    ToolTip="Select N parameter for N-Gramm metrics"
+                                    Visibility="{Binding Path=NGrammToggleChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                />
+                            </StackPanel>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox
+                                Grid.Column="0"
+                                Margin="10 0"
+                                materialDesign:HintAssist.Hint="K parameter for KNN"
+                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                Text="{Binding KParamTB}"
+                            />
+                            <TextBox
+                                Grid.Column="1"
+                                Margin="10 0"
+                                materialDesign:HintAssist.Hint="Number of articles for cold start"
+                                ToolTip="Enter number of articles to take from each category for cold start values"
+                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                Text="{Binding ColdStartTB}"
+                            />
+                        </Grid>
+
+                        
+                    </StackPanel>
+                    <StackPanel Grid.Row="3">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button
+
+                                Grid.Column="1"
+                                Command="{Binding CategorizeButton}"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                Margin="10 0"
+                                materialDesign:ButtonProgressAssist.Value="{Binding CategorizeButtonProgress}"
+                                materialDesign:ButtonProgressAssist.IsIndicatorVisible="True">
+
+                                <StackPanel
+                                    Orientation="Horizontal">
+                                    <TextBlock Text="Categorize Articles" />
+                                </StackPanel>
+                            </Button>
+
+                            <ComboBox Grid.Column="0"
+                                materialDesign:HintAssist.Hint="Metrics"
+                                ItemsSource="{Binding Path=MetricsCombobox}" 
+                                SelectedValue="{Binding Path=MetricsSelected}"
+                                Margin="10 0 0 0">
+                                <ComboBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel />
+                                    </ItemsPanelTemplate>
+                                </ComboBox.ItemsPanel>
+                            </ComboBox>
+                        </Grid>
+
+                    </StackPanel>
+
 
                 </Grid>
             </materialDesign:ColorZone>

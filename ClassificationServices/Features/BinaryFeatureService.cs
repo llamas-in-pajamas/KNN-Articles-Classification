@@ -13,7 +13,7 @@ namespace ClassificationServices
                 if (stemmedWords.Contains(keyword)) count++;
             }
 
-            return (count == limit ? 1 : 0);
+            return (count == limit ? 100 : 0);
         }
     }
 }
