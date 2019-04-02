@@ -21,7 +21,7 @@ namespace ClassificationServices
                     result += SimilarityFunction(keyword, word);
                 }
             }
-            return result / stemmedWords.Count;
+            return result / (stemmedWords.Count * keyWords.Count);
         }
 
         private double SimilarityFunction(string firstWord, string secondWord)
