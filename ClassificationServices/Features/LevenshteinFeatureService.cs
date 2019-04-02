@@ -37,7 +37,7 @@ namespace ClassificationServices
                 }
             }
 
-            return distance / longerWord.Length + 1;
+            return distance;
         }
     }
 }

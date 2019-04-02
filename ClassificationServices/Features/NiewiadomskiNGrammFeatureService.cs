@@ -34,7 +34,7 @@ namespace ClassificationServices
             double result = 0.0;
             for (int i = 0; i < firstWordLetterCount; i++)
             {
-                for (int j = 0; j < firstWordLetterCount - i + 1; j++)
+                for (int j = 0; j < firstWordLetterCount - i; j++)
                 {
                     if (secondWord.Contains(firstWord.Substring(j, i)))
                     {

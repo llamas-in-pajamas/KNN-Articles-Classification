@@ -13,7 +13,7 @@ namespace ClassificationServices
             {
                 for (int i = 0; i < lastIndex; i++)
                 {
-                    if (keyWord == stemmedWords[i])
+                    if (keyWord.Contains(stemmedWords[i]))
                     {
                         keywordFrequency++;
                     }

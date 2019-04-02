@@ -155,8 +155,8 @@ namespace View.ViewModel
                     _isDarkTheme = false;
                 }
 
-                int registryValue = (int)registryValueObject;
-
+                //int registryValue = (int)registryValueObject;
+                int registryValue = 0;
 
                 if (registryValue > 0)
                 {
@@ -258,13 +258,13 @@ namespace View.ViewModel
         {
             KnnClassifier knn = new KnnClassifier(_keyWords, new List<IFeatureService>()
             {
-                new NGrammFeatureService(),
+                //new NGrammFeatureService(),
                 //new NiewiadomskiNGrammFeatureService(),
                 //new BinaryFeatureService(),
-                ///new KeywordFrequencyFeatureService(), :)
-                //new Keyword20PercentFrequencyService(),
-                //new LevenshteinFeatureService(),
-                ///new PercentOfKeyWordsService() :)
+                //new KeywordFrequencyFeatureService(), // <-
+                new Keyword20PercentFrequencyService(),
+                //new LevenshteinFeatureService()
+                ///new PercentOfKeyWordsService() // <-
              }, new EuclideanDistance(), 10);
             List<string> temp = new List<string>();
             foreach (var VARIABLE in CategoryItems)
@@ -284,7 +284,7 @@ namespace View.ViewModel
             double lol = 0.0;
             foreach (var classificationModel in articles)
             {
-                if (classificationModel.PredictedTag == classificationModel.Tag)
+                if (classificationModel.PredictedTag.Equals(classificationModel.Tag))
                 {
                     lol++;
                 }

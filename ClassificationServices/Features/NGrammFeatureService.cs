@@ -31,9 +31,10 @@ namespace ClassificationServices
             int firstWordCount = firstWord.Length;
             int secondWordCount = secondWord.Length;
             int maximum = firstWordCount >= secondWordCount ? firstWordCount : secondWordCount;
+            int minimum = firstWordCount >= secondWordCount ? secondWordCount : firstWordCount;
             int n = _n;
-            if (maximum < _n)
-                n = maximum;
+            if (minimum < _n)
+                n = minimum;
 
             if (firstWordCount < secondWordCount)
             {
@@ -42,10 +43,9 @@ namespace ClassificationServices
                 secondWord = temp;
             }
             double denominator = maximum - n + 1;
-            double fractional = 1.0 / denominator;
-            double result = 0.0;
+            double result = 0;
 
-            for (int i = 0; i < denominator - 1; i++)
+            for (int i = 0; i < denominator; i++)
             {
                 if (secondWord.Contains(firstWord.Substring(i, n)))
                 {
@@ -53,8 +53,7 @@ namespace ClassificationServices
                 }
             }
 
-            var test = result * fractional;
-            return test;
+            return result * (1 / denominator);
         }
     }
 }
