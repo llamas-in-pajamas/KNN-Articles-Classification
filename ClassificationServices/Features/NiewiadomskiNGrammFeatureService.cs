@@ -24,11 +24,17 @@ namespace ClassificationServices
             int firstWordLetterCount = firstWord.Length;
             int secondWordLetterCount = secondWord.Length;
             double maximum = firstWordLetterCount >= secondWordLetterCount ? firstWordLetterCount : secondWordLetterCount;
+            if (firstWordLetterCount < secondWordLetterCount)
+            {
+                string temp = firstWord;
+                firstWord = secondWord;
+                secondWord = temp;
+            }
             double fractional = 2.0 / (Math.Pow(maximum, 2) + maximum);
             double result = 0.0;
-            for (int i = 1; i <= firstWordLetterCount; i++)
+            for (int i = 0; i < firstWordLetterCount; i++)
             {
-                for (int j = 1; j <= firstWordLetterCount - i + 1; j++)
+                for (int j = 0; j < firstWordLetterCount - i + 1; j++)
                 {
                     if (secondWord.Contains(firstWord.Substring(j, i)))
                     {

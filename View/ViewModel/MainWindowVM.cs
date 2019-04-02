@@ -118,7 +118,7 @@ namespace View.ViewModel
                 _keyWordsMethodSelected = value;
                 KeyWordsFilterWordsVisibility = value.Substring(0, 1) == "2";
                 OnPropertyChanged(nameof(KeyWordsMethodSelected));
-                
+
 
             }
         }
@@ -250,6 +250,46 @@ namespace View.ViewModel
 
             PreprocessDataProgressVisibility = false;
 
+            TestKnn();
+
+        }
+
+        private void TestKnn()
+        {
+            KnnClassifier knn = new KnnClassifier(_keyWords, new List<IFeatureService>()
+            {
+                /*new NGrammFeatureService(),
+                new NiewiadomskiNGrammFeatureService(),
+                new BinaryFeatureService(),*/
+                new KeywordFrequencyFeatureService(),
+                /*new Keyword20PercentFrequencyService(),
+                new LevenshteinFeatureService()*/
+             }, new EuclideanDistance(), 10);
+            List<string> temp = new List<string>();
+            foreach (var VARIABLE in CategoryItems)
+            {
+                if (VARIABLE.IsSelected)
+                {
+                    temp.Add(VARIABLE.Name);
+                }
+            }
+            knn.EnterColdStartArticles(ClassificationHelpers.GetNArticlesForColdStart(ref _trainingArticles, temp, 20));
+            List<ClassificationModel> articles = new List<ClassificationModel>();
+            foreach (var classificationModel in _trainingArticles)
+            {
+                articles.Add(knn.ClassifyArticle(classificationModel));
+            }
+
+            double lol = 0;
+            foreach (var classificationModel in articles)
+            {
+                if (classificationModel.PredictedTag == classificationModel.Tag)
+                {
+                    lol++;
+                }
+            }
+
+            lol /= articles.Count;
         }
 
         private void ExtractKeyWords()

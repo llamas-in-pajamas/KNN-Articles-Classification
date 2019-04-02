@@ -49,7 +49,7 @@
     <Compile Include="Metrics\IDistance.cs" />
     <Compile Include="Features\IFeatureService.cs" />
     <Compile Include="Features\Keyword20PercentFrequencyService.cs" />
-    <Compile Include="Features\KeywordCountFeatureService.cs" />
+    <Compile Include="Features\LevenshteinFeatureService.cs" />
     <Compile Include="Features\KeywordFrequencyFeatureService.cs" />
     <Compile Include="KnnClassifier.cs" />
     <Compile Include="Features\NGrammFeatureService.cs" />

@@ -23,13 +23,18 @@ namespace ClassificationServices
             return temp;
         }
 
-        public static List<ClassificationModel> GetNArticlesForColdStart(List<ClassificationModel> articles,
+        public static List<ClassificationModel> GetNArticlesForColdStart(ref List<ClassificationModel> articles,
             List<string> tags, int n)
         {
             List<ClassificationModel> temp = new List<ClassificationModel>();
             foreach (var tag in tags)
             {
                 temp.AddRange(articles.Where(t => t.Tag == tag).Take(n).ToList());
+            }
+
+            foreach (var classificationModel in temp)
+            {
+                articles.Remove(classificationModel);
             }
             return temp;
         }

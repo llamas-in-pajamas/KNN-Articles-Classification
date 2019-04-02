@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClassificationServices
 {
@@ -24,7 +22,7 @@ namespace ClassificationServices
 
         public void EnterColdStartArticles(List<ClassificationModel> data)
         {
-           ClassifiedArticles = new List<ClassificationModel>();
+            ClassifiedArticles = new List<ClassificationModel>();
             foreach (var classificationModel in data)
             {
                 classificationModel.PredictedTag = classificationModel.Tag;
@@ -35,14 +33,6 @@ namespace ClassificationServices
 
         public ClassificationModel ClassifyArticle(ClassificationModel article)
         {
-            if (ClassifiedArticles.Count < _kParameter)
-            {
-                throw new ArgumentException("K parameter is smaller then available neighbors");
-            }
-            if (ClassifiedArticles.Contains(article))
-            {
-                return article;
-            }
             Dictionary<ClassificationModel, double> distanceToNeighbors = new Dictionary<ClassificationModel, double>();
             article.CalculatedWeights = CalculateWeightsForArticle(article);
             foreach (var classificationModel in ClassifiedArticles)
@@ -58,7 +48,7 @@ namespace ClassificationServices
             foreach (var keyValuePair in listOfNeighbors)
             {
                 string tag = keyValuePair.Key.PredictedTag;
-               
+
                 if (!tagOccurrences.ContainsKey(tag))
                 {
                     tagOccurrences.Add(tag, 0);
@@ -68,29 +58,61 @@ namespace ClassificationServices
             }
 
             var selectTag = tagOccurrences.ToList();
-            selectTag.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
-            if (selectTag[0].Value == selectTag[1].Value)
-            {
-                double dist1 = 0;
-                double dist2 = 0;
-                foreach (var listOfNeighbor in listOfNeighbors)
-                {
-                    if (listOfNeighbor.Key.PredictedTag == selectTag[0].Key)
-                    {
-                        dist1 += listOfNeighbor.Value;
-                    }
-                    if (listOfNeighbor.Key.PredictedTag == selectTag[1].Key)
-                    {
-                        dist2 += listOfNeighbor.Value;
-                    }
-                }
-
-                article.PredictedTag = dist1>dist2 ? selectTag[0].Key : selectTag[1].Key;
-            }
-            else
+            if (selectTag.Count == 1)
             {
                 article.PredictedTag = selectTag[0].Key;
             }
+            else
+            {
+
+                selectTag.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+                var temp = tagOccurrences.Where(k => k.Value == selectTag[0].Value).ToList();
+
+                Dictionary<string, double> tagDoubles = new Dictionary<string, double>();
+                foreach (var keyValuePair in temp)
+                {
+                    if (!tagDoubles.ContainsKey(keyValuePair.Key))
+                    {
+                        tagDoubles.Add(keyValuePair.Key, 0.0);
+                    }
+                }
+
+                foreach (var listOfNeighbor in listOfNeighbors)
+                {
+                    if (tagDoubles.ContainsKey(listOfNeighbor.Key.PredictedTag))
+                    {
+                        tagDoubles[listOfNeighbor.Key.PredictedTag] += listOfNeighbor.Value;
+                    }
+                }
+
+                var chosentag = tagDoubles.ToList();
+                chosentag.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+                article.PredictedTag = chosentag[0].Key;
+                /*if (selectTag[0].Value == selectTag[1].Value)
+                {
+                    double dist1 = 0;
+                    double dist2 = 0;
+                    foreach (var listOfNeighbor in listOfNeighbors)
+                    {
+                        if (listOfNeighbor.Key.PredictedTag == selectTag[0].Key)
+                        {
+                            dist1 += listOfNeighbor.Value;
+                        }
+
+                        if (listOfNeighbor.Key.PredictedTag == selectTag[1].Key)
+                        {
+                            dist2 += listOfNeighbor.Value;
+                        }
+                    }
+
+                    //article.PredictedTag = dist1 > dist2 ? selectTag[0].Key : selectTag[1].Key;
+                } */
+                /* else
+                 {
+                     article.PredictedTag = selectTag[0].Key;
+                 }*/
+            }
+
             ClassifiedArticles.Add(article);
             return article;
         }
