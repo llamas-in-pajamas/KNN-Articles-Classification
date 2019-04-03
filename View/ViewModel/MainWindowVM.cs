@@ -248,11 +248,14 @@ namespace View.ViewModel
                 return;
             }
 
+            CategorizeButton = new RelayCommand(AbortCategorization);
+            CategorizeButtonText = "Click To Abort";
 
+            var articlesToProcess = new List<ClassificationModel>(_trainingArticles);
             var Metric = GetMetric();
             GenerateListOfCategorized();
             KnnClassifier knn = new KnnClassifier(_keyWords, FeatureServices, Metric, KParamTB);
-            knn.EnterColdStartArticles(ClassificationHelpers.GetNArticlesForColdStart(ref _trainingArticles, GetAllTags(), ColdStartTB));
+            knn.EnterColdStartArticles(ClassificationHelpers.GetNArticlesForColdStart(ref articlesToProcess, GetAllTags(), ColdStartTB));
             CurrentExpanded = ExpandedValues.None;
             CurrentExpanded = ExpandedValues.Categorized;
             bool success = false;
@@ -260,8 +263,7 @@ namespace View.ViewModel
             double time = 0;
             Stopwatch timer = new Stopwatch();
 
-            CategorizeButton = new RelayCommand(AbortCategorization);
-            CategorizeButtonText = "Click To Abort";
+           
 
 
 
@@ -271,13 +273,13 @@ namespace View.ViewModel
                 {
                     timer.Start();
                     
-                    foreach (var classificationModel in _trainingArticles)
+                    foreach (var classificationModel in articlesToProcess)
                     {
                         if (_canRun)
                         {
                             AddArticleToCategorized(knn.ClassifyArticle(classificationModel));
                             categorized++;
-                            CategorizeButtonProgress = categorized / _trainingArticles.Count * 100;
+                            CategorizeButtonProgress = categorized / articlesToProcess.Count * 100;
                         }
                         else
                         {
