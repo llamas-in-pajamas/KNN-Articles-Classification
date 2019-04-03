@@ -42,7 +42,7 @@ namespace ClassificationServices
             }
 
             var listOfNeighbors = distanceToNeighbors.ToList();
-            listOfNeighbors.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+            listOfNeighbors.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
             listOfNeighbors = listOfNeighbors.Take(_kParameter).ToList();
             Dictionary<string, int> tagOccurrences = new Dictionary<string, int>();
             foreach (var keyValuePair in listOfNeighbors)
@@ -86,7 +86,7 @@ namespace ClassificationServices
                 }
 
                 var chosentag = tagDoubles.ToList();
-                chosentag.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+                chosentag.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
                 article.PredictedTag = chosentag[0].Key;
                 /*if (selectTag[0].Value == selectTag[1].Value)
                 {

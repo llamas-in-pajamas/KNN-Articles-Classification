@@ -107,7 +107,7 @@ namespace View.ViewModel
         public int AmountLearningDataSlider { get; set; } = 60;
         public bool IsEnabledPreProcessBTN { get; set; }
         public bool PreprocessDataProgressVisibility { get; set; }
-        public int NumberOfKeyWordsTB { get; set; } = 20;
+        public int NumberOfKeyWordsTB { get; set; } = 15;
         public ObservableCollection<string> KeyWordsMethodCombobox { get; set; } = new ObservableCollection<string>()
         {
             "1. Term Frequency",
