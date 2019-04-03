@@ -26,7 +26,8 @@ namespace Services
                         continue;
                     }
                     //TODO: Decide on this top words parameter
-                    otherWords.AddRange(tfWord.Value.Take(numOfWordsToSkip));
+                    //otherWords.AddRange(tfWord.Value.Take(numOfWordsToSkip));
+                    otherWords.AddRange(tfWord.Value.Take((int)(tfWord.Value.Count*0.02)));
 
                 }
 
