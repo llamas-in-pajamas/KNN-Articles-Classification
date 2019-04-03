@@ -42,8 +42,7 @@ namespace ClassificationServices
             }
 
             var listOfNeighbors = distanceToNeighbors.ToList();
-            listOfNeighbors.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
-            listOfNeighbors = listOfNeighbors.Take(_kParameter).ToList();
+            listOfNeighbors = listOfNeighbors.OrderBy(c => c.Value).Take(_kParameter).ToList();
             Dictionary<string, int> tagOccurrences = new Dictionary<string, int>();
             foreach (var keyValuePair in listOfNeighbors)
             {
@@ -131,6 +130,12 @@ namespace ClassificationServices
                 var max = temp1.Max();
                 for (int i = 0; i < temp1.Count; i++)
                 {
+                    if (max.Equals(0))
+                    {
+                        temp1[i] = 0;
+                        continue;
+                        
+                    }
                     temp1[i] /= max;
                 }
                 temp.AddRange(temp1);

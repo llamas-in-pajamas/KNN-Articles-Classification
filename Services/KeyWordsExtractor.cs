@@ -14,6 +14,7 @@ namespace Services
             string category, List<string> stopList, int numOfWordsToSkip)
         {
             var TfWords = GetKeyWordsHelper(articles, category, stopList);
+            var tfWordsReturn = new Dictionary<string, List<string>>(TfWords);
             var keys = TfWords.Keys.ToList();
             foreach (var key in keys)
             {
@@ -29,10 +30,10 @@ namespace Services
 
                 }
 
-                TfWords[key] = TfWords[key].Except(otherWords).Take(numOfKeywords).ToList();
+                tfWordsReturn[key] = TfWords[key].Except(otherWords).Take(numOfKeywords).ToList();
             }
 
-            return TfWords;
+            return tfWordsReturn;
         }
 
         public static Dictionary<string, List<string>> GetKeyWordsTF(List<ArticleModel> articles,
@@ -40,7 +41,7 @@ namespace Services
             string category, List<string> stopList)
         {
             var TfWords = GetKeyWordsHelper(articles, category, stopList);
-
+            
             var keys = TfWords.Keys.ToList();
             foreach (var key in keys)
             {
