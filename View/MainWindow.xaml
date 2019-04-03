@@ -389,7 +389,7 @@
 
                                 <StackPanel
                                     Orientation="Horizontal">
-                                    <TextBlock Text="Categorize Articles" />
+                                    <TextBlock Text="{Binding CategorizeButtonText}" />
                                 </StackPanel>
                             </Button>
 

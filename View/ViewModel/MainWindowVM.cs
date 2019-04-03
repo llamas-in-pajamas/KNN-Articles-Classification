@@ -48,13 +48,14 @@ namespace View.ViewModel
         private string _errorMessage;
         private string _currentExpanded;
 
+        private bool _canRun = true;
         
         #endregion
         public ICommand SelectCatalogButton { get; }
         public ICommand SelectStopListButton { get; }
         public ICommand SelectDefaultButton { get; }
         public ICommand PreProcessButton { get; }
-        public ICommand CategorizeButton { get; }
+        public ICommand CategorizeButton { get; set; }
 
         #region props
 
@@ -153,6 +154,8 @@ namespace View.ViewModel
 
         public double CategorizeButtonProgress { get; set; }
 
+        public string CategorizeButtonText { get; set; } = "Categorize Articles";
+
         #endregion
 
 
@@ -225,6 +228,11 @@ namespace View.ViewModel
 
         #region Categorization Methods
 
+        private void AbortCategorization()
+        {
+            _canRun = false;
+        }
+
         private async void Categorize()
         {
             
@@ -239,6 +247,8 @@ namespace View.ViewModel
                 ShowErrorMaterial("Choose at least 1 Feature before categorizing");
                 return;
             }
+
+
             var Metric = GetMetric();
             GenerateListOfCategorized();
             KnnClassifier knn = new KnnClassifier(_keyWords, FeatureServices, Metric, KParamTB);
@@ -247,20 +257,41 @@ namespace View.ViewModel
             CurrentExpanded = ExpandedValues.Categorized;
             bool success = false;
             double categorized = 0;
+            double time = 0;
+            Stopwatch timer = new Stopwatch();
+
+            CategorizeButton = new RelayCommand(AbortCategorization);
+            CategorizeButtonText = "Click To Abort";
+
+
+
             await Task.Run(() =>
             {
                 try
                 {
+                    timer.Start();
+                    
                     foreach (var classificationModel in _trainingArticles)
                     {
-                        AddArticleToCategorized(knn.ClassifyArticle(classificationModel));
-                        categorized++;
-                        CategorizeButtonProgress = categorized / _trainingArticles.Count * 100;
+                        if (_canRun)
+                        {
+                            AddArticleToCategorized(knn.ClassifyArticle(classificationModel));
+                            categorized++;
+                            CategorizeButtonProgress = categorized / _trainingArticles.Count * 100;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        
                     }
+                    timer.Stop();
+                    time = timer.ElapsedMilliseconds;
                     success = true;
                 }
                 catch (Exception e)
                 {
+                    timer.Stop();
                     _errorMessage = e.Message;
                 }
             });
@@ -270,9 +301,20 @@ namespace View.ViewModel
             }
             else
             {
-                ShowMsgMaterial($"Classification complete. Accuracy: {GetAccuracy()*100}%");
+                if (!_canRun)
+                {
+                    ShowErrorMaterial($"Classification INCOMPLETE. Process Aborted by user. Accuracy: {GetAccuracy() * 100}%. Time elapsed: {time}ms");
+                    
+                }
+                else
+                {
+                    ShowMsgMaterial($"Classification complete. Accuracy: {GetAccuracy() * 100}%. Time elapsed: {time}ms");
+                }
             }
 
+            CategorizeButtonText = "Categorize Articles";
+            CategorizeButton = new RelayCommand(Categorize);
+            _canRun = true;
             CategorizeButtonProgress = 0;
 
         }
