@@ -9,10 +9,10 @@ namespace SGMParser
 {
     public static class SGMLReader
     {
-        public static List<ArticleModel> ReadAllSGMLFromDirectory(string pathToDirectory)
+        public static List<ArticleModel> ReadAllSGMLFromDirectory(string[] files)
         {
             List<ArticleModel> articles = new List<ArticleModel>();
-            string[] files = System.IO.Directory.GetFiles(pathToDirectory, "*.sgm");
+            
             foreach (string file in files)
             {
                 articles.AddRange(ReadSGML(file));

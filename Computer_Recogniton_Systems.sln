@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionMethods", "Extensi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassificationServices", "ClassificationServices\ClassificationServices.csproj", "{6BBC425F-6295-4FE6-A834-0C2F75212F5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "20NewsGroupsParser", "20NewsGroupsParser\20NewsGroupsParser.csproj", "{44D8A9E4-D5D0-45BF-AF43-A66DC049FFE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,14 @@ Global
 		{6BBC425F-6295-4FE6-A834-0C2F75212F5C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6BBC425F-6295-4FE6-A834-0C2F75212F5C}.Release|x64.ActiveCfg = Release|x64
 		{6BBC425F-6295-4FE6-A834-0C2F75212F5C}.Release|x64.Build.0 = Release|x64
+		{44D8A9E4-D5D0-45BF-AF43-A66DC049FFE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44D8A9E4-D5D0-45BF-AF43-A66DC049FFE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44D8A9E4-D5D0-45BF-AF43-A66DC049FFE4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{44D8A9E4-D5D0-45BF-AF43-A66DC049FFE4}.Debug|x64.Build.0 = Debug|Any CPU
+		{44D8A9E4-D5D0-45BF-AF43-A66DC049FFE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44D8A9E4-D5D0-45BF-AF43-A66DC049FFE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44D8A9E4-D5D0-45BF-AF43-A66DC049FFE4}.Release|x64.ActiveCfg = Release|Any CPU
+		{44D8A9E4-D5D0-45BF-AF43-A66DC049FFE4}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

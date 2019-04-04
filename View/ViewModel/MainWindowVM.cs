@@ -17,6 +17,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using View.ViewModel.Base;
+using _20NewsGroupsParser;
 
 
 namespace View.ViewModel
@@ -98,7 +99,11 @@ namespace View.ViewModel
             {
                 OnPropertyChanged(nameof(CategoryComboboxSelected));
                 _categoryComboboxSelected = value;
-                LoadCategoryItems(value, _articles);
+                if (value!=null)
+                {
+                    LoadCategoryItems(value, _articles);
+                }
+                
             }
         }
         public ObservableCollection<SelectableVM> CategoryItems { get; set; }
@@ -603,7 +608,8 @@ namespace View.ViewModel
             {
                 try
                 {
-                    _articles = SGMLReader.ReadAllSGMLFromDirectory(path);
+                    var files = Directory.GetFiles(path, "*.sgm");
+                    _articles = files.Length != 0 ? SGMLReader.ReadAllSGMLFromDirectory(files) : NewsReader.ReadAllNewsFromDirectory(path);
                     SelectArticleText = $"Loaded {_articles.Count} articles!";
                     NumOfArticlesVisibility = true;
                     LoadCategories(_articles);

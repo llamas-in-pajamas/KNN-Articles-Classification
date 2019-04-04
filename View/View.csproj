@@ -176,6 +176,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\20NewsGroupsParser\20NewsGroupsParser.csproj">
+      <Project>{44d8a9e4-d5d0-45bf-af43-a66dc049ffe4}</Project>
+      <Name>20NewsGroupsParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ClassificationServices\ClassificationServices.csproj">
       <Project>{6bbc425f-6295-4fe6-a834-0c2f75212f5c}</Project>
       <Name>ClassificationServices</Name>
