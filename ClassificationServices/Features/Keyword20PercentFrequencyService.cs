@@ -22,5 +22,9 @@ namespace ClassificationServices
 
             return keywordFrequency;
         }
+        public override string ToString()
+        {
+            return "Keyword occurence frequency in 20% of article’s body";
+        }
     }
 }

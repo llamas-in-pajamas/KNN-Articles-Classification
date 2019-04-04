@@ -15,5 +15,10 @@ namespace ClassificationServices
 
             return (count);
         }
+
+        public override string ToString()
+        {
+            return "Percent of keywords occurred in an article";
+        }
     }
 }

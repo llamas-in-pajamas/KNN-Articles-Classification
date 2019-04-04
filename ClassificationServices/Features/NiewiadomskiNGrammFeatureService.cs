@@ -44,5 +44,10 @@ namespace ClassificationServices
             }
             return fractional * result;
         }
+
+        public override string ToString()
+        {
+            return "Niewiadomski N Gramm";
+        }
     }
 }

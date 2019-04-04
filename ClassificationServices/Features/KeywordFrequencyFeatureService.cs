@@ -19,5 +19,9 @@ namespace ClassificationServices
             }
             return keywordFrequency;
         }
+        public override string ToString()
+        {
+            return "Key Words Frequency in an article";
+        }
     }
 }

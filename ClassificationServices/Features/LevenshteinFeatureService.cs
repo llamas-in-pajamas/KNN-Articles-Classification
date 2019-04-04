@@ -39,5 +39,10 @@ namespace ClassificationServices
 
             return distance;
         }
+
+        public override string ToString()
+        {
+            return "Levenshtein Feature";
+        }
     }
 }

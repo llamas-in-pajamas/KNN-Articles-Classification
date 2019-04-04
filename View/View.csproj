@@ -114,6 +114,7 @@
     <Compile Include="Converters\ExpandedConverter.cs" />
     <Compile Include="Helper\ArticleMetadataExtractor.cs" />
     <Compile Include="Helper\ExpandedValues.cs" />
+    <Compile Include="Helper\SaveDataModel.cs" />
     <Compile Include="ViewModel\CategorizedItem.cs" />
     <Compile Include="ViewModel\KeyWordsVM.cs" />
     <Compile Include="ViewModel\SelectableVM.cs" />

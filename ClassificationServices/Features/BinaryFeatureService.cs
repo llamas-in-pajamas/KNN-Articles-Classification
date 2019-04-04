@@ -15,5 +15,10 @@ namespace ClassificationServices
 
             return (count == limit ? 100 : 0);
         }
+
+        public override string ToString()
+        {
+            return "Binary Service";
+        }
     }
 }

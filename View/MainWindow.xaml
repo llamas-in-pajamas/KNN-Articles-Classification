@@ -404,6 +404,17 @@
                                     </ItemsPanelTemplate>
                                 </ComboBox.ItemsPanel>
                             </ComboBox>
+
+                            <Button
+
+                                Grid.Column="2"
+                                Command="{Binding SaveButton}"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                Margin="10 0"
+                                materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                                Content="Save"
+                                ToolTip="Save all generated data to a text file"
+                                />
                         </Grid>
 
                     </StackPanel>

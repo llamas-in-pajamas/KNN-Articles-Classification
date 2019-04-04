@@ -55,5 +55,9 @@ namespace ClassificationServices
 
             return result * (1 / denominator);
         }
+        public override string ToString()
+        {
+            return "N Gramm";
+        }
     }
 }

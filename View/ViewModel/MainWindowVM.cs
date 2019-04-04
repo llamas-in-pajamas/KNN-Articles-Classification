@@ -1,4 +1,5 @@
-﻿using BespokeFusion;
+﻿using _20NewsGroupsParser;
+using BespokeFusion;
 using ClassificationServices;
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +19,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using View.ViewModel.Base;
-using _20NewsGroupsParser;
 
 
 namespace View.ViewModel
@@ -50,13 +51,15 @@ namespace View.ViewModel
         private string _currentExpanded;
 
         private bool _canRun = true;
-        
+
         #endregion
         public ICommand SelectCatalogButton { get; }
         public ICommand SelectStopListButton { get; }
         public ICommand SelectDefaultButton { get; }
         public ICommand PreProcessButton { get; }
         public ICommand CategorizeButton { get; set; }
+        public ICommand SaveButton { get; set; }
+
 
         #region props
 
@@ -99,11 +102,11 @@ namespace View.ViewModel
             {
                 OnPropertyChanged(nameof(CategoryComboboxSelected));
                 _categoryComboboxSelected = value;
-                if (value!=null)
+                if (value != null)
                 {
                     LoadCategoryItems(value, _articles);
                 }
-                
+
             }
         }
         public ObservableCollection<SelectableVM> CategoryItems { get; set; }
@@ -161,6 +164,7 @@ namespace View.ViewModel
         public double CategorizeButtonProgress { get; set; }
 
         public string CategorizeButtonText { get; set; } = "Categorize Articles";
+        public SaveDataModel SaveData { get; private set; }
 
         #endregion
 
@@ -175,6 +179,7 @@ namespace View.ViewModel
             ApplyBase(_isDarkTheme);
             ApplyColors(_isDarkTheme);
             CategorizeButton = new RelayCommand(Categorize);
+            SaveButton = new RelayCommand(SaveDataToFile);
         }
 
         #region Theme Solvers
@@ -232,6 +237,57 @@ namespace View.ViewModel
 
         #endregion
 
+        private void SaveDataToFile()
+        {
+            SaveFileDialog sfd = new SaveFileDialog()
+            {
+                AddExtension = true,
+                DefaultExt = "txt",
+                Filter = "Text files (*.txt)|*.txt"
+            };
+            var fileName = "KSR_" + DateTime.Now.ToShortTimeString();
+            sfd.FileName = fileName.Replace(':', '_');
+            var result = sfd.ShowDialog();
+            if (result == true)
+            {
+                TextWriter tw = new StreamWriter(sfd.FileName);
+                tw.WriteLine("Category: " + SaveData.Category);
+                tw.WriteLine("Tags:");
+                foreach (var tag in SaveData.Tags)
+                {
+                    tw.WriteLine(@" " + tag);
+                }
+                tw.WriteLine("Percent of learning data: " + SaveData.LearningDataPercent + "%");
+                tw.WriteLine("Key Words Extraction Method: " + SaveData.KeyWordsExtractionMethod);
+                if (!SaveData.KeyWordsExtendedPercent.Equals(0))
+                {
+                    tw.WriteLine("Extended Key Words filter percentage: " + SaveData.KeyWordsExtendedPercent + "%");
+                }
+
+
+                tw.WriteLine("Key Words amount per tag: " + SaveData.KeyWordsCount);
+                tw.WriteLine("Articles pre-processing time: " + SaveData.KeyWordsSearchTime + "ms");
+                tw.WriteLine("------CATEGORIZATION------");
+                tw.WriteLine("KNN K parameter: " + SaveData.Kparam);
+                tw.WriteLine("Features:");
+                foreach (var feature in SaveData.UsedFeatures)
+                {
+                    tw.WriteLine(@" " + feature);
+                }
+                if (SaveData.NGrammNParam != 0)
+                {
+                    tw.WriteLine(@"     N Gramm parameter: " + SaveData.NGrammNParam);
+                }
+                tw.WriteLine("Number of cold start articles for each category: " + SaveData.ColdStartCount);
+                tw.WriteLine("Metric: " + SaveData.Metric);
+                tw.WriteLine("Accuracy: " + SaveData.AccuracyPercent + "%");
+                tw.WriteLine("Categorization time: " + SaveData.CategorizationTime + "ms");
+                tw.Close();
+                Process.Start(sfd.FileName);
+            }
+            
+        }
+
         #region Categorization Methods
 
         private void AbortCategorization()
@@ -241,7 +297,7 @@ namespace View.ViewModel
 
         private async void Categorize()
         {
-            
+
             if (string.IsNullOrEmpty(MetricsSelected))
             {
                 ShowErrorMaterial("Choose Metric before categorizing");
@@ -268,12 +324,18 @@ namespace View.ViewModel
             double categorized = 0;
             double time = 0;
             Stopwatch timer = new Stopwatch();
+
+            SaveData.ColdStartCount = ColdStartTB;
+            SaveData.Kparam = KParamTB;
+
+
+
             await Task.Run(() =>
             {
                 try
                 {
                     timer.Start();
-                    
+
                     foreach (var classificationModel in articlesToProcess)
                     {
                         if (_canRun)
@@ -286,7 +348,7 @@ namespace View.ViewModel
                         {
                             break;
                         }
-                        
+
                     }
                     timer.Stop();
                     time = timer.ElapsedMilliseconds;
@@ -307,7 +369,7 @@ namespace View.ViewModel
                 if (!_canRun)
                 {
                     ShowErrorMaterial($"Classification INCOMPLETE. Process Aborted by user. Accuracy: {GetAccuracy() * 100}%. Time elapsed: {time}ms");
-                    
+
                 }
                 else
                 {
@@ -320,6 +382,11 @@ namespace View.ViewModel
             _canRun = true;
             CategorizeButtonProgress = 0;
 
+            SaveData.AccuracyPercent = GetAccuracy() * 100;
+            SaveData.CategorizationTime = time;
+            SaveData.Metric = MetricsSelected;
+
+
         }
 
         private List<IFeatureService> GetFeatureServices()
@@ -327,37 +394,52 @@ namespace View.ViewModel
             List<IFeatureService> temp = new List<IFeatureService>();
             if (BinaryToggleChecked)
             {
-                temp.Add(new BinaryFeatureService());
+                var service = new BinaryFeatureService();
+                temp.Add(service);
+                SaveData.UsedFeatures.Add(service.ToString());
             }
 
             if (TwentyFreqToggleChecked)
             {
-                temp.Add(new Keyword20PercentFrequencyService());
+                var service = new Keyword20PercentFrequencyService();
+                SaveData.UsedFeatures.Add(service.ToString());
+                temp.Add(service);
             }
 
             if (FreqToggleChecked)
             {
-                temp.Add(new KeywordFrequencyFeatureService());
+                var service = new KeywordFrequencyFeatureService();
+                SaveData.UsedFeatures.Add(service.ToString());
+                temp.Add(service);
             }
 
             if (LevenshteinToggleChecked)
             {
-                temp.Add(new LevenshteinFeatureService());
+                var service = new LevenshteinFeatureService();
+                SaveData.UsedFeatures.Add(service.ToString());
+                temp.Add(service);
             }
 
             if (NiewiadomskiNGrammToggleChecked)
             {
-                temp.Add(new NiewiadomskiNGrammFeatureService());
+                var service = new NiewiadomskiNGrammFeatureService();
+                SaveData.UsedFeatures.Add(service.ToString());
+                temp.Add(service);
             }
 
             if (PercentToggleChecked)
             {
-                temp.Add(new PercentOfKeyWordsService());
+                var service = new PercentOfKeyWordsService();
+                SaveData.UsedFeatures.Add(service.ToString());
+                temp.Add(service);
             }
 
             if (NGrammToggleChecked)
             {
-                temp.Add(new NGrammFeatureService(NGrammParamTB));
+                var service = new NGrammFeatureService(NGrammParamTB);
+                SaveData.UsedFeatures.Add(service.ToString());
+                SaveData.NGrammNParam = NGrammParamTB;
+                temp.Add(service);
             }
 
             return temp;
@@ -457,6 +539,7 @@ namespace View.ViewModel
             PreprocessDataProgressVisibility = true;
             CurrentExpanded = ExpandedValues.None;
             KeyWordsIsEnabled = false;
+            SaveData = new SaveDataModel();
             bool success = false;
             double time = 0;
             Stopwatch timer = new Stopwatch();
@@ -469,7 +552,6 @@ namespace View.ViewModel
                     NumberOfLearningArticlesTB = _learningArticles.Count;
                     NumberOfTrainingArticlesTB = _trainingArticles.Count;
                     timer.Start();
-
                     ExtractKeyWords();
 
                     timer.Stop();
@@ -497,6 +579,15 @@ namespace View.ViewModel
                 CurrentExpanded = ExpandedValues.KeyWords;
             }
 
+
+            SaveData.Category = CategoryComboboxSelected;
+            SaveData.Tags = GetAllTags();
+            SaveData.KeyWordsSearchTime = time;
+            SaveData.LearningDataPercent = AmountLearningDataSlider;
+            SaveData.KeyWordsCount = NumberOfKeyWordsTB;
+            SaveData.KeyWordsExtractionMethod = KeyWordsMethodSelected;
+
+
             PreprocessDataProgressVisibility = false;
         }
 
@@ -512,6 +603,7 @@ namespace View.ViewModel
                     break;
                 case "2":
                     _keyWords = KeyWordsExtractor.GetKeyWordsTFExtended(_learningArticles, NumberOfKeyWordsTB, CategoryComboboxSelected, _stopList, KeyWordsFilterWordsTB);
+                    SaveData.KeyWordsExtendedPercent = KeyWordsFilterWordsTB;
                     break;
                 default:
                     throw new ArgumentException("You need to select key-words extraction method");
