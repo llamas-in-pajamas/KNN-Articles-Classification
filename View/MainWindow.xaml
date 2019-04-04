@@ -157,10 +157,10 @@
                     <StackPanel Grid.Row="3" Margin="0 10 0 0"  Orientation="Horizontal" HorizontalAlignment="Center" >
 
                         <TextBox
-                            materialDesign:HintAssist.Hint="N of Top Words filter"
+                            materialDesign:HintAssist.Hint="N% of Top Words filter"
                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                             Text="{Binding KeyWordsFilterWordsTB}"
-                            ToolTip="Select Number of most frequent words to create distinct categories"
+                            ToolTip="Select Number of most frequent words in each category to create distinct ones"
                             Visibility="{Binding Path=KeyWordsFilterWordsVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
                         />
 

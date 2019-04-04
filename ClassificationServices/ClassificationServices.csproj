@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\BinaryFeatureService.cs" />
+    <Compile Include="Metrics\ChebyshevDistance.cs" />
     <Compile Include="Metrics\CityMetric.cs" />
     <Compile Include="ClassificationModel.cs" />
     <Compile Include="ClassificationHelpers.cs" />

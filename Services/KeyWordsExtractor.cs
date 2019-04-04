@@ -16,6 +16,7 @@ namespace Services
             var TfWords = GetKeyWordsHelper(articles, category, stopList);
             var tfWordsReturn = new Dictionary<string, List<string>>(TfWords);
             var keys = TfWords.Keys.ToList();
+            double percentOfArticle = (double)numOfWordsToSkip / 100;
             foreach (var key in keys)
             {
                 List<string> otherWords = new List<string>();
@@ -27,7 +28,7 @@ namespace Services
                     }
                     //TODO: Decide on this top words parameter
                     //otherWords.AddRange(tfWord.Value.Take(numOfWordsToSkip));
-                    otherWords.AddRange(tfWord.Value.Take((int)(tfWord.Value.Count*0.02)));
+                    otherWords.AddRange(tfWord.Value.Take((int)(tfWord.Value.Count*percentOfArticle)));
 
                 }
 

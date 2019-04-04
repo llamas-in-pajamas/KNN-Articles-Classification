@@ -125,7 +125,7 @@ namespace View.ViewModel
         }
 
         public bool KeyWordsFilterWordsVisibility { get; set; }
-        public int KeyWordsFilterWordsTB { get; set; } = 100;
+        public int KeyWordsFilterWordsTB { get; set; } = 2;
 
         #region Switches
 
@@ -146,7 +146,8 @@ namespace View.ViewModel
         public ObservableCollection<string> MetricsCombobox { get; set; } = new ObservableCollection<string>()
         {
             "Euclidean Distance",
-            "City Metric"
+            "City Metric",
+            "Chebyshev Distance"
         };
         public string MetricsSelected { get; set; }
 
@@ -262,11 +263,6 @@ namespace View.ViewModel
             double categorized = 0;
             double time = 0;
             Stopwatch timer = new Stopwatch();
-
-           
-
-
-
             await Task.Run(() =>
             {
                 try
@@ -370,6 +366,8 @@ namespace View.ViewModel
                     return new EuclideanDistance();
                 case "City Metric":
                     return new CityMetric();
+                case "Chebyshev Distance":
+                    return new ChebyshevDistance();
             }
 
             return null;
