@@ -300,8 +300,9 @@ namespace View.ViewModel
                 ShowErrorMaterial("Choose Metric before categorizing");
                 return;
             }
-            var FeatureServices = GetFeatureServices();
-            if (FeatureServices.Count == 0)
+            SaveData = new SaveDataModel();
+            var featureServices = GetFeatureServices();
+            if (featureServices.Count == 0)
             {
                 ShowErrorMaterial("Choose at least 1 Feature before categorizing");
                 return;
@@ -313,7 +314,7 @@ namespace View.ViewModel
             var articlesToProcess = new List<ClassificationModel>(_trainingArticles);
             var Metric = GetMetric();
             GenerateListOfCategorized();
-            KnnClassifier knn = new KnnClassifier(_keyWords, FeatureServices, Metric, KParamTB);
+            KnnClassifier knn = new KnnClassifier(_keyWords, featureServices, Metric, KParamTB);
             knn.EnterColdStartArticles(ClassificationHelpers.GetNArticlesForColdStart(ref articlesToProcess, GetAllTags(), ColdStartTB));
             CurrentExpanded = ExpandedValues.None;
             CurrentExpanded = ExpandedValues.Categorized;
