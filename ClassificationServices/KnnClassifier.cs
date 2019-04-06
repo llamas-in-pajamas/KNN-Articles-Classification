@@ -87,29 +87,7 @@ namespace ClassificationServices
                 var chosentag = tagDoubles.ToList();
                 chosentag.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
                 article.PredictedTag = chosentag[0].Key;
-                /*if (selectTag[0].Value == selectTag[1].Value)
-                {
-                    double dist1 = 0;
-                    double dist2 = 0;
-                    foreach (var listOfNeighbor in listOfNeighbors)
-                    {
-                        if (listOfNeighbor.Key.PredictedTag == selectTag[0].Key)
-                        {
-                            dist1 += listOfNeighbor.Value;
-                        }
-
-                        if (listOfNeighbor.Key.PredictedTag == selectTag[1].Key)
-                        {
-                            dist2 += listOfNeighbor.Value;
-                        }
-                    }
-
-                    //article.PredictedTag = dist1 > dist2 ? selectTag[0].Key : selectTag[1].Key;
-                } */
-                /* else
-                 {
-                     article.PredictedTag = selectTag[0].Key;
-                 }*/
+               
             }
 
             ClassifiedArticles.Add(article);

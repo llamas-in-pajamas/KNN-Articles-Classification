@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SGMParser;
 
 namespace Services
 {
@@ -8,19 +9,19 @@ namespace Services
     {
         private Dictionary<string, int> _idfDictionary = new Dictionary<string, int>();
         private Dictionary<string, double> _idfTfFactorsDictionary = new Dictionary<string, double>();
-
-        /*public void Call(ref List<ArticleDataModel> articles)
+        
+        public void Call(ref List<ArticleModel> articles)
         {
             AddArticlesToIdf(articles);
             GenerateIdfTfFactors(articles);
             //InsertIdfFactorsIntoArticles(ref articles);
         }
 
-        private void AddArticlesToIdf(List<ArticleDataModel> articles)
+        private void AddArticlesToIdf(List<ArticleModel> articles)
         {
             foreach (var articleDataModel in articles)
             {
-                List<string> distinctWords = new List<string>(articleDataModel.StemmedWords).Distinct().ToList();
+                List<string> distinctWords = new List<string>(articleDataModel.Article.Body.Split(',')).Distinct().ToList();
                 foreach (var distinctWord in distinctWords)
                 {
                     if (!_idfDictionary.ContainsKey(distinctWord))
@@ -34,14 +35,14 @@ namespace Services
             
         }
 
-        private void GenerateIdfTfFactors(List<ArticleDataModel> articles)
+        private void GenerateIdfTfFactors(List<ArticleModel> articles)
         {
             double numOfArticles = articles.Count;
             foreach (var i in _idfDictionary)
             {
                 _idfTfFactorsDictionary.Add(i.Key, Math.Log10(numOfArticles / i.Value));
             }
-        }*/
+        }
 
         /*private void InsertIdfFactorsIntoArticles(ref List<ArticleDataModel> articles)
         {

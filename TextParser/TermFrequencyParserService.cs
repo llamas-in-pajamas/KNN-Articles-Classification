@@ -30,11 +30,7 @@ namespace TextParser
             }
             List<string> keys = new List<string>(_wordFrequency.Keys);
             int allWordsCount = Words.Count;
-            //TODO: Decide if we need percent values
-            /*foreach (string key in keys)
-            {
-                _wordFrequency[key] /= allWordsCount;
-            }*/
+            
         }
 
         private void sortDictionary()

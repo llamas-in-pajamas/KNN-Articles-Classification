@@ -186,9 +186,6 @@ namespace View.ViewModel
 
         private void ReadWindowsSetting()
         {
-            //            var uiSettings = SystemParameters.WindowGlassBrush;
-            //            var uiSettings1 = SystemParameters.WindowGlassColor;
-
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath))
             {
                 object registryValueObject = key?.GetValue(RegistryValueName);
@@ -528,7 +525,6 @@ namespace View.ViewModel
         }
         #endregion
         #region Pre-process Data Methods  
-        //TODO: Finish pre-processing articles
         private async void PreProcessData()
         {
             if (string.IsNullOrEmpty(KeyWordsMethodSelected))
