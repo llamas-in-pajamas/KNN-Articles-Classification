@@ -300,7 +300,7 @@ namespace View.ViewModel
                 ShowErrorMaterial("Choose Metric before categorizing");
                 return;
             }
-            SaveData = new SaveDataModel();
+            SaveData.UsedFeatures = new List<string>();
             var featureServices = GetFeatureServices();
             if (featureServices.Count == 0)
             {
